@@ -377,7 +377,7 @@ class Evaluator:
         # should be the correct answer
         precision = (tp / float(n_test)) if n_test > 0 else 1
         recall = (tp / float(n_std)) if n_std > 0 else 1
-        f1 = (2 * precision * recall / (precision + recall))
+        f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
         return (precision, recall, f1, tp, n_std, n_test)
 
