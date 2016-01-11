@@ -43,7 +43,7 @@ class Test:
             
         # read the file that should consist of lines like
         # [TAG] [START_SYMBOL_INDEX] [LENGTH]
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             r = csv.reader(f, delimiter=' ', quotechar=Config.QUOTECHAR)
             for index, parts in enumerate(r):
                 # skip the empty lines

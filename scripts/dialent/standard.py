@@ -130,13 +130,17 @@ class Standard:
     def loadEntities(self, filename):
         """Load the data from a given 'objects' file. Expected format:
         
-        line = <object_id> <type> <span_id>
+        line = <object_id> <type> <span_id> # <comment>
         """
         
         self.entities = []
-        with open(filename) as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             r = csv.reader(f, delimiter=' ', quotechar=Config.QUOTECHAR)
             for index, line in enumerate(r):
+                if Config.COMMENT_SEPARATOR in line:
+                    comment_index = line.index(Config.COMMENT_SEPARATOR)
+                    line = line[:comment_index]
+
                 if len(line) == 0:
                     continue
                 
