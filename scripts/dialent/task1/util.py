@@ -260,8 +260,22 @@ class Evaluator:
 
         curr = std[0]
         max_res = (weight, pairs)
+
+        possible_pairs_count = 0
+        pair_max_alternatives = 0
         for i, t in enumerate(test):
             if m[curr, t] != 0:
+
+                # first gather information on possible actions
+                possible_pairs_count += 1
+                alt_count = 0
+                for k in std:
+                    if m[k, t] != 0:
+                        alt_count += 1
+                    if alt_count > pair_max_alternatives:
+                        pair_max_alternatives = alt_count
+                
+                # try to confirm the pair
                 res = self._recursiveSearch(
                     m, std[1:], test[:i] + test[i+1:],
                     weight + m[curr, t],
@@ -270,12 +284,16 @@ class Evaluator:
                     max_res = res
 
         # check what would happen if this standard object were ignored
-        res = self._recursiveSearch(
-            m, std[1:], test,
-            weight + m[curr, t],
-            pairs + [(curr, t)])
-        if res[0] > max_res[0]:
-            max_res = res
+        # this check is obviously performance-heavy and only necessary under
+        # these conditions
+        if (possible_pairs_count == 0 or
+                possible_pairs_count == 1 and pair_max_alternatives > 1):
+            res = self._recursiveSearch(
+                m, std[1:], test,
+                weight,
+                pairs)
+            if res[0] > max_res[0]:
+                max_res = res
 
         return max_res
     
