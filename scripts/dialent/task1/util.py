@@ -108,7 +108,7 @@ class Evaluator:
 
         res,tmp = self._doEvaluate(std_dir, test_dir, is_locorg_allowed)
         print(summary_header_template.format(
-            'Type', 'P', 'R', 'F1', 'TP', 'In Std.', 'In Test'))
+            'Type', 'P', 'R', 'F1', 'TP', 'In Std.', 'In Test.'))
 
         tp = 0
         n_std = 0
@@ -149,15 +149,18 @@ class Evaluator:
             line = [name]
             for tag in allowed_tags:
                 vals = dct[name][tag]
-                line.append('{:3.2f}/{:3.2f}/{:3.2f}'.format(
-                    vals[0], vals[1], vals[2]))
+                line.append('{:3.2f} / {:3.2f} / {:3.2f} / {:4.1f} / {:3} / {:3}'.format(
+                    *vals))
             lst.append(line)
             
         # print stuff
         lst = sorted(lst, key=lambda x: int(x[0][5:]))
+
+        print('     '.join(['{:10}'.format('')]
+                         + ['{:37}'.format(x) for x in allowed_tags]))
         for line in lst:
-            print('{:10} {:12} {:12} {:12}'.format(*line))
-        
+            print('     '.join(['{:10}'.format(line[0])]
+                         + ['{:37}'.format(x) for x in line[1:]]))        
     
     def _doEvaluate(self, std_dir, test_dir, is_locorg_allowed=True):
         """
@@ -256,7 +259,7 @@ class Evaluator:
             return weight, pairs
 
         curr = std[0]
-        max_res = (0, [])
+        max_res = (weight, pairs)
         for i, t in enumerate(test):
             if m[curr, t] != 0:
                 res = self._recursiveSearch(
@@ -265,6 +268,14 @@ class Evaluator:
                     pairs + [(curr, t)])
                 if res[0] > max_res[0]:
                     max_res = res
+
+        # check what would happen if this standard object were ignored
+        res = self._recursiveSearch(
+            m, std[1:], test,
+            weight + m[curr, t],
+            pairs + [(curr, t)])
+        if res[0] > max_res[0]:
+            max_res = res
 
         return max_res
     
@@ -335,17 +346,20 @@ class Evaluator:
                 
         fp = len(t.tokens.difference(s.tokens))
         
-        n_std = tp + fn
-        n_test = tp + fp
-        
-        return self._calcMetrics(tp, n_std, n_test)[2]
+        summ = tp + fp + fn
+        assert(summ > 0)
+        return tp / summ
     
 
     def _calcMetrics(self, tp, n_std, n_test):
         """Calculate precision, recall and f1"""
-        precision = (tp / float(n_test)) if n_test > 0 else 0
-        recall = (tp / float(n_std)) if n_std > 0 else 0
-        f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0
+
+        # default precision and recall are set to 1
+        # because technically an empty test corresponding to an empty standard
+        # should be the correct answer
+        precision = (tp / float(n_test)) if n_test > 0 else 1
+        recall = (tp / float(n_std)) if n_std > 0 else 1
+        f1 = (2 * precision * recall / (precision + recall))
 
         return (precision, recall, f1, tp, n_std, n_test)
 

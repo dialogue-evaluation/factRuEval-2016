@@ -8,6 +8,7 @@ class Config:
     QUOTECHAR = '|'
     TOKEN_LINE_LENGTH = 4
     SPAN_FILE_SEPARATOR = '  # '
+    COMMENT_SEPARATOR = '#'
     STANDARD_TYPES = {
         'Person' : 'per',
         'Organization' : 'org',
@@ -41,7 +42,8 @@ class Tables:
             'org_name' : 1,
             'loc_descr' : 1,
             'surname' : 1,
-            'loc_name' : 1
+            'loc_name' : 1,
+            'nickname' : 1
         },
 
         'org' : {
@@ -81,7 +83,8 @@ class Tables:
             'org_name' : 1,
             'loc_descr' : 1,
             'surname' : 1,
-            'loc_name' : 1
+            'loc_name' : 1,
+            'nickname' : 1
         },
 
         'org' : {
