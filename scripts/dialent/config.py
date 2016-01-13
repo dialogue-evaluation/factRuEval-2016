@@ -22,83 +22,50 @@ class Config:
 class Tables:
     """Tables with error weights"""
 
-    # this table specifies weights of various spans in entity evaluation
-    # essentially the same as QUALITY_TABLE, but gives slight malus
-    # on the otherwise ignored spans
-    PRIORITY = {
-        'locorg' : {
-            'none' : 1,
-            'loc_descr' : 1,
-            'org_name' : 1,
-            'org_descr' : 1,
-            'loc_descr' : 1,
-            'loc_name' : 1
-        },
+    def getMark(entity_tag, span_tag, dfl_value = 0):
+        """Lookup error weight of the provided pair.
+        
+        Returns default value if the pair is not in QUALITY table"""
+        if entity_tag in Tables.QUALITY and span_tag in Tables.QUALITY[entity_tag]:
+            return Tables.QUALITY[entity_tag][span_tag]
+        else:
+            return dfl_value
 
-        'loc' : {
-            'none' : 1,
-            'name' : 1,
-            'org_descr' : 1,
-            'org_name' : 1,
-            'loc_descr' : 1,
-            'surname' : 1,
-            'loc_name' : 1,
-            'nickname' : 1
-        },
 
-        'org' : {
-            'none' : 1,
-            'org_descr' : 1,
-            'surname' : 1,
-            'loc_name' : 1,
-            'loc_descr' : 1,
-            'org_name' : 1,
-            'job' : 1
-        },
-
-        'per' : {
-            'none' : 1,
-            'name' : 1,
-            'patronymic' : 1,
-            'nickname' : 1,
-            'surname' : 1
-        }
-    }
-    
     # this table specifies weights of various spans in entity evaluation
     QUALITY = {
         'locorg' : {
-            'none' : 1,
-            'loc_descr' : 1,
+#            'none' : 1,
+#            'loc_descr' : 1,
             'org_name' : 1,
-            'org_descr' : 1,
-            'loc_descr' : 1,
+#            'org_descr' : 1,
+#            'loc_descr' : 1,
             'loc_name' : 1
         },
 
         'loc' : {
-            'none' : 1,
-            'name' : 1,
-            'org_descr' : 1,
-            'org_name' : 1,
-            'loc_descr' : 1,
-            'surname' : 1,
+#            'none' : 1,
+#            'name' : 1,
+#            'org_descr' : 1,
+#            'org_name' : 1,
+#            'loc_descr' : 1,
+#            'surname' : 1,
             'loc_name' : 1,
-            'nickname' : 1
+#            'nickname' : 1
         },
 
         'org' : {
-            'none' : 1,
-            'org_descr' : 1,
-            'surname' : 1,
-            'loc_name' : 1,
-            'loc_descr' : 1,
+#            'none' : 1,
+#            'org_descr' : 1,
+#            'surname' : 1,
+#            'loc_name' : 1,
+#            'loc_descr' : 1,
             'org_name' : 1,
-            'job' : 1
+#            'job' : 1
         },
 
         'per' : {
-            'none' : 1,
+#            'none' : 1,
             'name' : 1,
             'patronymic' : 1,
             'nickname' : 1,

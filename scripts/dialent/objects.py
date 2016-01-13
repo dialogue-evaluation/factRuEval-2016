@@ -22,6 +22,9 @@ class Token:
     def __repr__(self):
         return '{}[{}-{}, #{}]'.format(
             self.text, self.start, self.end, self.id)
+
+    def __str__(self):
+        return repr(self)
     
     def isIgnored(self):
         """Check if this token should be ignored during the comparison.
@@ -54,6 +57,10 @@ class Span:
     def __repr__(self):
         return '{}[{} #{}],  ntokens={}'.format(
             self.text, self.tag, self.id, self.ntokens)
+
+    def __str__(self):
+        return repr(self)
+
     
 
 #########################################################################################
@@ -80,6 +87,10 @@ class Entity:
         res += '\n'
         return res
 
+    def __str__(self):
+        return repr(self)
+
+
 
 #########################################################################################
 
@@ -93,6 +104,10 @@ class Interval:
         
     def __repr__(self):
         return '<{}; {}>'.format(self.start, self.end)
+
+    def __str__(self):
+        return repr(self)
+
     
 #########################################################################################
 
@@ -102,12 +117,15 @@ class TokenSet:
     def __init__(self, token_list, tag):
         self.tokens = set(token_list)
         self.tag = tag
-        self.is_embedded = False
-        self._span_marks = {}
+        self.parents = []
+        self._span_marks = dict([(x, 0) for x in self.tokens])
         
     def __repr__(self):
         return '<' + ' '.join([repr(x) for x in self.sortedTokens()]) + '>'
-    
+
+    def __str__(self):
+        return repr(self)
+
     def sortedTokens(self):
         """Make a list of tokens sorted by their starting position"""
         return sorted(self.tokens, key=lambda x: x.start)
@@ -133,7 +151,7 @@ class TokenSet:
         return len(self.tokens.intersection(other.tokens)) > 0
     
     def toInterval(self):
-        """Creates an interval for the response generator"""
+        """Create an interval for the response generator"""
         t = self.sortedTokens()
         
         # try to include quotes on the left and any punctuation on the right
@@ -150,12 +168,29 @@ class TokenSet:
         return Interval(start, length)
         
     def mark(self, token):
-        """Returns the span mark for this token"""
+        """Return the span mark for this token"""
         if token not in self._span_marks:
             return 'none'
         else:
             return self._span_marks[token]
         
     def setMark(self, token, mark):
-        """Sets the span mark for the given token"""
-        self._span_marks[token] = mark
+        """Try to increase the mark of the given token"""
+        if(self._span_marks[token] < mark):
+            self._span_marks[token] = mark
+
+    def isEmbedded(self):
+        """Only true if this object is embedded into another object"""
+        return len(self.parents)>0
+
+    def findParents(self, all_token_sets):
+        """Fill the parent list of the current token set"""
+        self.parents = []
+        for other in all_token_sets:
+            if other is self:
+                # all_token_sets can include this set as well
+                continue
+
+            if self.tokens.issubset(other.tokens):
+                self.parents.append(other)
+

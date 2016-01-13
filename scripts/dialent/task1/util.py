@@ -114,13 +114,13 @@ class Evaluator:
         n_std = 0
         n_test = 0
 
-        for key in res:
+        for key in sorted(res.keys()):
             print(summary_line_template.format(key, *res[key]))
             tp += res[key][3]
             n_std += res[key][4]
             n_test += res[key][5]
 
-        overall = self._calcMetrics(tp, n_std, n_test)
+        overall = calcMetrics(tp, n_std, n_test)
         print('')
         print(summary_line_template.format('Overall', *overall))
         
@@ -215,7 +215,7 @@ class Evaluator:
                 n_test[tag] += res[tag][5]
                 
         # calculate global metrics:
-        return dict([(tag, self._calcMetrics(tp[tag], n_std[tag], n_test[tag]))
+        return dict([(tag, calcMetrics(tp[tag], n_std[tag], n_test[tag]))
                    for tag in allowed_tags]), doc_results
     
 
@@ -241,63 +241,6 @@ class Evaluator:
 
         return dict([(x, self.doCompareTag(s[x], t[x])) for x in allowed_tags])
 
-
-    def _recursiveSearch(self, m, std, test, weight, pairs):
-        """
-            Run a recursive search of the maximum matching.
-
-            Returns the following tuple:
-                (best weight, list of pairs that achieve the best weight)
-
-            m - cost matrix
-            std - standard indices list
-            test - test indices list
-            weight - current accumulated weight
-            pairs - current list of built pairs
-        """
-        if len(std) == 0 or len(test) == 0:
-            return weight, pairs
-
-        curr = std[0]
-        max_res = (weight, pairs)
-
-        possible_pairs_count = 0
-        pair_max_alternatives = 0
-        for i, t in enumerate(test):
-            if m[curr, t] != 0:
-
-                # first gather information on possible actions
-                possible_pairs_count += 1
-                alt_count = 0
-                for k in std:
-                    if m[k, t] != 0:
-                        alt_count += 1
-                    if alt_count > pair_max_alternatives:
-                        pair_max_alternatives = alt_count
-                
-                # try to confirm the pair
-                res = self._recursiveSearch(
-                    m, std[1:], test[:i] + test[i+1:],
-                    weight + m[curr, t],
-                    pairs + [(curr, t)])
-                if res[0] > max_res[0]:
-                    max_res = res
-
-        # check what would happen if this standard object were ignored
-        # this check is obviously performance-heavy and only necessary under
-        # these conditions
-        if (possible_pairs_count == 0 or
-                possible_pairs_count == 1 and pair_max_alternatives > 1):
-            res = self._recursiveSearch(
-                m, std[1:], test,
-                weight,
-                pairs)
-            if res[0] > max_res[0]:
-                max_res = res
-
-        return max_res
-    
-
     def doCompareTag(self, std, test):
         """
             Compare two lists of TokenSet objects
@@ -310,74 +253,193 @@ class Evaluator:
             std - list of TokenSet objects from the standard markup
             test - list of TokenSet objects from the test markup
         """
+        optimizer = MatchingOptimizer(std, test)
+        return optimizer.findBestResult()
+
+
+#########################################################################################
+
+class MatchingOptimizer:
+    """Finds the best possible matching for the given standard and test."""
+
+    def __init__(self, std, test):
+        """Initialize the object.
+            
+        std - list of TokenSets provided by the standard markup
+        test - list of TokenSets provided by the test markup."""            
+
+        self.std = std
+        self.test = test
 
         n_std = len(std)
         n_test = len(test)
-        m = np.zeros((n_std, n_test))
+        self.m = np.zeros((n_std, n_test))
 
         # fill the bipartite graph cost matrix
         for i, s in enumerate(std):
             for j, t in enumerate(test):
                 if s.intersects(t):
-                    m[i, j] = self._calculatePairPriority(std[i], test[j])
+                    self.m[i, j] = self._calculatePairPriority(std[i], test[j])
+
+
+    def findBestResult(self):
+        """Find and evaluate the best possible matching"""
 
         # find the maximum matching
         # uses naive search due to matrix sparcity,
         # as well as scipy 0.17 being unavailable :(
 
-        s_ind = list(range(n_std))
-        t_ind = list(range(n_test))
+        s_ind = [i for i,x in enumerate(self.std)]
+        t_ind = [i for i,x in enumerate(self.test)]
 
-        # find the matching and calculate metrics
-        priority, pairs = self._recursiveSearch(m, s_ind, t_ind, 0, [])
+        return self._recursiveSearch(s_ind, t_ind, [])
+
+
+    def _evaluatePairs(self, pairs):
+        """Run an evaluation of the provided set of pairs.
+        
+        Returns the usual metrics tuple"""
+
         tp = 0
+        matched_std_objects = set()
         for i, j in pairs:
-            tp += self._calculatePairQuality(std[i], test[j])
-        return self._calcMetrics(tp, n_std, n_test)
-    
+            tp += self._calculatePairQuality(self.std[i], self.test[j])
+            matched_std_objects.add(self.std[i])
+
+        n_test = len(self.test)
+
+        # this is the logic used to skip unmatched embedded organizations in the standard
+        # markup, but only if the larger organization is correctly matched
+        n_std = 0
+        for obj in self.std:
+            is_relevant = True
+            if not obj in matched_std_objects:
+                for parent in obj.parents:
+                    if parent in matched_std_objects:
+                        is_relevant = False
+
+            if is_relevant:
+                n_std += 1
+        
+        return calcMetrics(tp, n_std, n_test)
+
+    def _findMatches(self, s_index, test):
+        """Finds a list of possible matches for the standard object with the given index
+        within the list of available test objects.
+        
+        Returns a list of test object indices
+        
+        According to the documentation, any perfectly fitting objects MUST be matched"""
+        perfect_matches = [t for t in test if self.m[s_index, t] == 1]
+        matches = [t for t in test if self.m[s_index, t] != 0] 
+        return perfect_matches if len(perfect_matches) > 0 else matches
+
+
+    def _recursiveSearch(self, std, test, pairs):
+        """
+            Run a recursive search of the maximum matching.
+
+            Returns the standard metrics tuple
+
+            m - cost matrix
+            std - standard indices list
+            test - test indices list
+            pairs - current list of built pairs
+        """
+        if len(std) == 0 or len(test) == 0:
+            # final step, evaluate the matching
+            return self._evaluatePairs(pairs)
+
+        curr = std[0]
+        max_res = None
+
+        possible_pairs_count = 0
+        pair_max_alternatives = 0
+
+        for t in self._findMatches(curr, test):
+            i = test.index(t)
+
+            # let's see what other matching options does this test object have
+            # this is necessary to check conditions for the logic below
+            possible_pairs_count += 1
+            alt_count = 0
+            skip_test_object = False
+            for k in std:
+                if self.m[k, t] == 1 and self.m[curr, t] < 1:
+                    # test objects that have some other perfect matching must be skipped
+                    skip_test_object = True
+                if self.m[k, t] != 0:
+                    alt_count += 1
+                if alt_count > pair_max_alternatives:
+                    pair_max_alternatives = alt_count
+                
+            if skip_test_object:
+                continue
+
+            # try to confirm the pair
+            res = self._recursiveSearch(
+                std[1:], test[:i] + test[i+1:],
+                pairs + [(curr, t)])
+            if max_res is None or res[2] > max_res[2]:
+                max_res = res
+
+        # check what would happen if this standard object were ignored
+        # this check is obviously performance-heavy and only necessary under
+        # these conditions
+        if (possible_pairs_count == 0 or
+                possible_pairs_count == 1 and pair_max_alternatives > 1):
+            res = self._recursiveSearch(
+                std[1:], test,
+                pairs)
+            if max_res is None or res[2] > max_res[2]:
+                max_res = res
+
+        return max_res    
+
+
     # utility methods
-    
+
     def _calculatePairPriority(self, s, t):
         """Calculate the preliminary quality of a matched pair"""
-        return self._doEvalPair(s, t, Tables.PRIORITY)
+        tp = len(s.tokens.intersection(t.tokens))
+        fn = len(s.tokens.difference(t.tokens))
+        fp = len(t.tokens.difference(s.tokens))
+        
+        summ = tp + fp + fn
+        assert(summ > 0)
+        return tp / summ if summ > 0 else 0
     
-
     def _calculatePairQuality(self, s, t):
         """Calculate the final quality of a matched pair"""
-        return self._doEvalPair(s, t, Tables.QUALITY)
-    
-
-    def _doEvalPair(self, s, t, ref_table):
-        """Evaluate pair using the provided reference table"""
 
         tokens_tp = s.tokens.intersection(t.tokens)
         tokens_fn = s.tokens.difference(t.tokens)
         
         tp = 0.0
         for token in tokens_tp:
-            tp += ref_table[s.tag][s.mark(token)]
+            tp += s.mark(token)
 
         fn = 0.0
         for token in tokens_fn:
-            fn += ref_table[s.tag][s.mark(token)]
-
+            fn += s.mark(token)
                 
         fp = len(t.tokens.difference(s.tokens))
         
         summ = tp + fp + fn
-        assert(summ > 0)
-        return tp / summ
-    
 
-    def _calcMetrics(self, tp, n_std, n_test):
-        """Calculate precision, recall and f1"""
+        # summ can be equal to zero in cases when the entity has no 'priority' spans like
+        # org_name. In these cases, we will just compare the annotations with no weights
+        return tp / summ if summ > 0 else self._calculatePairPriority(s,t)
 
-        # default precision and recall are set to 1
-        # because technically an empty test corresponding to an empty standard
-        # should be the correct answer
-        precision = (tp / float(n_test)) if n_test > 0 else 1
-        recall = (tp / float(n_std)) if n_std > 0 else 1
-        f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
-        return (precision, recall, f1, tp, n_std, n_test)
+def calcMetrics(tp, n_std, n_test):
+    """Calculate precision, recall and f1"""
 
+    # default precision and recall are set to 1
+    # because technically an empty test corresponding to an empty standard
+    # should be the correct answer
+    precision = (tp / float(n_test)) if n_test > 0 else 1
+    recall = (tp / float(n_std)) if n_std > 0 else 1
+    f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+
+    return (precision, recall, f1, tp, n_std, n_test)

@@ -1,7 +1,15 @@
 # Runs the evaluation of the task 1 response
+# Requires python 3 and numpy
 
 # Usage:
-# <Python3 executable> t1_eval.py -s [std_dir] -t [test_dir] -[True/False]
+#
+#   <Python3 executable> t1_eval.py -s <std_dir> -t <test_dir> [-l]
+#       -s [std_dir]    - path to the standard files directory
+#       -t [test_dir]   - path to the response files directory
+#       -l              - if included, disables "locorg" entity evaluation
+#                         (such entities will be considered locations)
+#       -h              - display this message
+#
 
 #########################################################################################
 
@@ -51,10 +59,6 @@ def main():
 
     assert std_path != None and test_path != None, 'Stnadard and test paths must be set'\
         '(see python t1_eval.py -h)'
-
-    #from dialent.standard import Standard
-    #s = Standard('book_58', 'D:/work/romip/standard')
-    #print(s.tokens)
 
     e = Evaluator()
     e.evaluate(std_path, test_path, is_locorg_allowed)
