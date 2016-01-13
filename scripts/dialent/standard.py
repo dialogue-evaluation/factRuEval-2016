@@ -3,7 +3,7 @@
 import os
 import csv
 
-from dialent.config import Config
+from dialent.config import Config, Tables
 
 from dialent.objects import Token
 from dialent.objects import Span
@@ -184,6 +184,15 @@ class Standard:
                     key)
             for span in entity.spans:
                 for token in span.tokens:
-                    ts.setMark(token, span.tag)
+                    mark = Tables.getMark(ts.tag, span.tag)
+                    ts.setMark(token, mark)
             res[key].append(ts)
+
+        # find and mark organizations embedded within other organizations
+        all_orgs = list(res['org'])
+        if is_locorg_allowed:
+            all_orgs.extend(res['locorg'])
+        for org in all_orgs:
+            org.findParents(all_orgs)
+
         return res
