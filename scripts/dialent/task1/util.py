@@ -308,15 +308,22 @@ class MatchingOptimizer:
 
         n_test = len(self.test)
 
-        # this is the logic used to skip unmatched embedded organizations in the standard
-        # markup, but only if the larger organization is correctly matched
         n_std = 0
         for obj in self.std:
             is_relevant = True
             if not obj in matched_std_objects:
+                # this is the logic used to skip unmatched embedded organizations in the
+                # standard markup, but only if the larger organization is correctly
+                # matched
                 for parent in obj.parents:
                     if parent in matched_std_objects:
                         is_relevant = False
+
+                # alternatively, check if the object has no valuable spans
+                # unmatched objects with no spans marked by a positive number 
+                total_mark = sum([obj.mark(token) for token in obj.tokens])
+                if total_mark == 0.0:
+                    is_relevant = False
 
             if is_relevant:
                 n_std += 1
