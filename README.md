@@ -68,6 +68,6 @@ http://www.dialog-21.ru/evaluation/2016/letter/
 - значение
 
 Допустимые ключи:
-- name, surname, patronymic, nickname - у объектов типа Person
+- firstname, surname, patronymic, nickname - у объектов типа Person
 - name - у Location, LocOrg, Org
 - wikidata - у всех
