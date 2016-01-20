@@ -35,7 +35,7 @@ class Tables:
     # this table specifies weights of various spans in entity evaluation
     QUALITY = {
         'locorg' : {
-#            'none' : 1,
+            'none' : 1,
 #            'loc_descr' : 1,
             'org_name' : 1,
 #            'org_descr' : 1,
@@ -44,10 +44,10 @@ class Tables:
         },
 
         'loc' : {
-#            'none' : 1,
+            'none' : 1,
 #            'name' : 1,
 #            'org_descr' : 1,
-#            'org_name' : 1,
+            'org_name' : 1,
 #            'loc_descr' : 1,
 #            'surname' : 1,
             'loc_name' : 1,
@@ -55,17 +55,17 @@ class Tables:
         },
 
         'org' : {
-#            'none' : 1,
+            'none' : 1,
 #            'org_descr' : 1,
 #            'surname' : 1,
-#            'loc_name' : 1,
+            'loc_name' : 1,
 #            'loc_descr' : 1,
             'org_name' : 1,
 #            'job' : 1
         },
 
         'per' : {
-#            'none' : 1,
+            'none' : 1,
             'name' : 1,
             'patronymic' : 1,
             'nickname' : 1,
