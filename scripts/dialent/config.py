@@ -47,7 +47,7 @@ class Tables:
 #            'none' : 1,
 #            'name' : 1,
 #            'org_descr' : 1,
-#            'org_name' : 1,
+            'org_name' : 1,
 #            'loc_descr' : 1,
 #            'surname' : 1,
             'loc_name' : 1,
@@ -58,7 +58,7 @@ class Tables:
 #            'none' : 1,
 #            'org_descr' : 1,
 #            'surname' : 1,
-#            'loc_name' : 1,
+            'loc_name' : 1,
 #            'loc_descr' : 1,
             'org_name' : 1,
 #            'job' : 1
