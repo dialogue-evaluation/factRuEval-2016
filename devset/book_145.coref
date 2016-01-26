@@ -1,51 +1,51 @@
-174 11919 11919 11921
-name команда Феррари
-
-180 11927 11927
-surname Култхард
-firstname Дэвид
-
-173 11913 11913 11918
-surname Шумахер
-firstname Михаэль
-
-169 11911 11911 11916 11916 11924
+169 11916 11911 11924
 firstname Фернандо
 surname Алонсо
-
-177 11923 11923
-firstname Марк
-surname Уэббер
-
-183 11930 11930
-name группа компаний Michelin
 
 170 11912
 name Алонсо
 
-178 11925 11925 11925
-surname Монтойе
-firstname Хуан Пабло
+172 11915 11914
+name La Rascasse
+name Раскассэ
 
-176 11922 11922
-surname Райкконен
+173 11918 11913
+firstname Михаэль
+surname Шумахер
+
+174 11919 11921
+name команда Феррари
+
+175 11920
+firstname Фелипе
+surname Масса
+
+176 11922
 firstname Кими
+surname Райкконен
 
-179 11926 11926
+177 11923
+firstname Марк
+surname Уэббер
+
+178 11925
+firstname Хуан Пабло
+surname Монтойе
+
+179 11926
 name команда МакЛарен-Мерседес
 
-181 11928 11928
+180 11927
+firstname Дэвид
+surname Култхард
+
+181 11928
 name команды Red Bull
 
-182 11929 11929
-surname Мишлен
+182 11929
 firstname Эдуард
+surname Мишлен
 
-175 11920 11920
-surname Масса
-firstname Фелипе
-
-172 11914 11915
-name Раскассэ
-name La Rascasse
+183 11930
+name группа компаний Michelin
 
