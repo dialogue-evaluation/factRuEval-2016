@@ -65,15 +65,15 @@ class Span:
 
 #########################################################################################
 
-class Entity:
-    """Entity consisting of spans"""
+class Mention:
+    """Mention consisting of spans"""
     
     def __init__(self, id, tag, span_ids, span_dict):
-        """Create a new entity of a given type with the provided spans"""
+        """Create a new mention of a given type with the provided spans"""
         self.id = int(id)
         
         if not tag in Config.STANDARD_TYPES:
-            raise Exception('Unknown entity tag: {}'.format(tag))
+            raise Exception('Unknown mention tag: {}'.format(tag))
         self.tag = Config.STANDARD_TYPES[tag]
         
         self.spans = []
@@ -194,3 +194,174 @@ class TokenSet:
             if self.tokens.issubset(other.tokens):
                 self.parents.append(other)
 
+#########################################################################################
+
+class Attribute:
+    """Entity attribute with one or several synonimous values"""
+
+    def __init__(self):
+        self.name = ''
+        self.value = ''
+
+    # static build methods:
+    @classmethod
+    def fromStandard(cls, lines):
+        """Load an attribute from the set of lines representing it.
+        This method corresponds to the standard format of representation
+        
+        Returns a new Attribute instance"""
+
+        assert(len(lines) == 1)
+
+        line = lines[0]
+        parts = line.split(' ')
+
+        instance = cls()
+        instance.name = parts[0].strip().lower()
+        instance.value = ' '.join(parts[1:]).lower()
+        instance.value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+
+        return instance
+
+    @classmethod
+    def fromTest(cls, line):
+        """Load an attribute from the set of lines representing it.
+        This method corresponds to the test format of representation.
+        
+        Returns a new Attribute instance"""
+
+        parts = line.split(':')
+        assert(len(parts) == 2)
+
+        instance = cls()
+        instance.name = parts[0].strip().lower()
+        instance.value = parts[1].strip().lower()
+        instance.value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+
+        return instance
+        
+    def matches(self, other):
+        """Returns true if a set of value of other corresponds to a set of values of this"""
+        # TODO this is a stub to be reworked after the export format is finalized
+        return self.name == other.name and self.value == other.value
+
+    def toTestString(self):
+        """Creates a test representation of this attribute"""
+
+        return '{} : {}'.format(self.name, self.value)
+
+    def __repr__(self):
+        return '{} : {}'.format(self.name, self.value)
+
+    def __str__(self):
+        return self.__repr__()
+
+class Entity:
+    """Entity with a set of attributes, assembled from several mentions throughout the
+    document"""
+
+    def __init__(self):
+        
+        self.attributes = []
+        self.id = -1
+        self.tag = 'unknown'
+        self.spans = []
+        self.mentions = []
+        self.is_problematic = False
+
+    # static build methods
+    @classmethod
+    def fromStandard(cls, text, mention_dict, span_dict):
+        """Load the entity from a block of text of the following format
+        
+        [entity_id][ (span_id|mention_id)]+
+        [attr_name] [attr_value]
+        ...
+        [attr_name] [attr_value]
+
+        mention_dict - mention_id -> mention
+        span_dict - span_id -> span
+        """
+
+        assert(len(text.strip('\r\n\t ')) > 0)
+        lines = text.split('\n')
+
+        instance = cls()
+        for line in lines[1:]:
+            if len(line) == 0:
+                continue
+            instance.attributes.append(Attribute.fromStandard([line]))
+        instance._load_id_line(lines[0], mention_dict, span_dict)
+
+        return instance
+
+    @classmethod
+    def fromTest(cls, text):
+        """Load the entity from a test file using a different format:
+        
+        [entity_type]
+        [attr_name]:[attr_value]
+        ...
+        [attr_name]:[attr_value]
+        """
+
+        assert(len(text.strip('\r\n\t ')) > 0)
+
+        instance = cls()
+
+        lines = text.split('\n')
+        for line in lines[1:]:
+            if len(line) == 0:
+                continue
+            instance.attributes.append(Attribute.fromTest(line))
+        instance.tag = lines[0].lower()
+
+        return instance
+
+    def toTestString(self):
+        """Creates a test representation of this entity"""
+        res = self.tag
+        for attr in self.attributes:
+            res += '\n' + attr.toTestString()
+
+        return res
+
+    def _load_id_line(self, line, mention_dict, span_dict):
+        """Load ids from the first line of the standard representation"""
+        str_ids = line.strip(' \n\r\t').split(' ')
+        self.id = int(str_ids[0])
+
+        self.is_problematic = False
+        
+        for _some_id in str_ids[1:]:
+            some_id = int(_some_id)
+            if some_id in mention_dict:
+                assert(not some_id in span_dict)
+                mention = mention_dict[some_id]
+                if not mention in self.mentions:
+                    self.mentions.append(mention)
+            elif some_id in span_dict:
+                assert(not some_id in mention_dict)
+                span = span_dict[some_id]
+                if not span in self.spans:
+                    self.spans.append(span)
+            else:
+                self.is_problematic = True
+                print('FOUND PROBLEMATIC ENTITY: {} has no {}'.format(self, some_id))
+
+        # it is not actually the case, at least for now
+        # but arguably it should be
+        # assert(len(self.mentions) > 0)
+        
+        if len(self.mentions) > 0:
+            self.tag = self.mentions[0].tag
+
+    def __repr__(self):
+        res = ''
+        res += '{} #{}'.format(self.tag, self.id)
+        for attribute in self.attributes:
+            res += '\n  {}'.format(attribute)
+        return res
+
+    def __str__(self):
+        return self.__repr__()

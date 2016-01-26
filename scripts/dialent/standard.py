@@ -7,6 +7,7 @@ from dialent.config import Config, Tables
 
 from dialent.objects import Token
 from dialent.objects import Span
+from dialent.objects import Mention
 from dialent.objects import Entity
 from dialent.objects import Interval
 from dialent.objects import TokenSet
@@ -21,6 +22,7 @@ class Standard:
      - 'NAME.tokens'
      - 'NAME.spans'
      - 'NAME.objects'
+     - 'NAME.coref'
      """
     
     def __init__(self, name, path='.'):
@@ -28,8 +30,10 @@ class Standard:
             full_name = os.path.join(path, name)
             self.loadTokens(full_name + '.tokens')
             self.loadSpans(full_name + '.spans')
-            self.loadEntities(full_name + '.objects')
+            self.loadMentions(full_name + '.objects')
+            self.loadCoreference(full_name + '.coref')
             self.loadText(full_name + '.txt')
+            self.name = name
         except Exception as e:
             print('Failed to load the standard of {}:'.format(name))
             print(e)
@@ -127,13 +131,13 @@ class Standard:
         # fill the span dictionary
         self._span_dict = dict([(x.id, x) for x in self.spans])
 
-    def loadEntities(self, filename):
+    def loadMentions(self, filename):
         """Load the data from a given 'objects' file. Expected format:
         
         line = <object_id> <type> <span_id> # <comment>
         """
         
-        self.entities = []
+        self.mentions = []
         with open(filename, 'r', encoding='utf-8') as f:
             r = csv.reader(f, delimiter=' ', quotechar=Config.QUOTECHAR)
             for index, line in enumerate(r):
@@ -150,21 +154,49 @@ class Standard:
                             index, filename))
                 
                 try:
-                    entity_id = int(line[0])
+                    mention_id = int(line[0])
                     span_indices = [int(descr) for descr in line[2:]]
                 except Exception as e:
-                    raise Exception('Invalid entity or span id: line {} of file {}:\n{}'.format(
+                    raise Exception('Invalid mention or span id: line {} of file {}:\n{}'.format(
                         index, filename, e))
-                self.entities.append(
-                    Entity(entity_id, line[1], span_indices, self._span_dict))
+                self.mentions.append(
+                    Mention(mention_id, line[1], span_indices, self._span_dict))
                 
+        # fill the mention dictionary
+        self._mention_dict = dict([(x.id, x) for x in self.mentions])
+
+    def loadCoreference(self, filename):
+        """Load coreference data from the associated file"""
+        self.entities = []
+
+        try:
+            open(filename, 'r', encoding='utf-8')
+        except:
+            # there are currently some documents with no .coref layer. This is temporary
+            return
+        
+        with open(filename, 'r', encoding='utf-8') as f:
+            buffer = ''
+            for raw_line in f:
+                line = raw_line.strip(' \t\n\r')
+                if len(line) == 0:
+                    if len(buffer) > 0:
+                        e = Entity.fromStandard(buffer, self._mention_dict, self._span_dict)
+                        self.entities.append(e)
+                        buffer = ''
+                else:
+                    buffer += line + '\n'
+                
+            if len(buffer) > 0:
+                self.entities.append(Entity.fromTest(buffer))
+
     def loadText(self, filename):
         """Load text from the associated text file"""
         with open(filename, 'r', encoding='utf-8') as f:
             self.text = ''.join( [line for line in f] )
             
     def makeTokenSets(self, is_locorg_allowed=True):
-        """Create a dictionary of typed TokenSet objects corresponding to the entities
+        """Create a dictionary of typed TokenSet objects corresponding to the mentions
         
         is_locorg_allowed - enable/disable 'LocOrg' tag"""
         
@@ -174,15 +206,15 @@ class Standard:
             allowed_tags.add('locorg')
             
         res = dict([(x, []) for x in allowed_tags])
-        for entity in self.entities:
-            key = entity.tag
+        for mention in self.mentions:
+            key = mention.tag
             if key == 'locorg' and not is_locorg_allowed:
                 key = 'loc'
             assert(key in allowed_tags)
             ts = TokenSet(
-                    [x for span in entity.spans for x in span.tokens],
+                    [x for span in mention.spans for x in span.tokens],
                     key)
-            for span in entity.spans:
+            for span in mention.spans:
                 for token in span.tokens:
                     mark = Tables.getMark(ts.tag, span.tag)
                     ts.setMark(token, mark)

@@ -22,20 +22,20 @@ class Config:
 class Tables:
     """Tables with error weights"""
 
-    def getMark(entity_tag, span_tag, dfl_value = 0):
+    def getMark(mention_tag, span_tag, dfl_value = 0):
         """Lookup error weight of the provided pair.
         
         Returns default value if the pair is not in QUALITY table"""
-        if entity_tag in Tables.QUALITY and span_tag in Tables.QUALITY[entity_tag]:
-            return Tables.QUALITY[entity_tag][span_tag]
+        if mention_tag in Tables.QUALITY and span_tag in Tables.QUALITY[mention_tag]:
+            return Tables.QUALITY[mention_tag][span_tag]
         else:
             return dfl_value
 
 
-    # this table specifies weights of various spans in entity evaluation
+    # this table specifies weights of various spans in mention evaluation
     QUALITY = {
         'locorg' : {
-#            'none' : 1,
+            'none' : 1,
 #            'loc_descr' : 1,
             'org_name' : 1,
 #            'org_descr' : 1,
@@ -44,7 +44,7 @@ class Tables:
         },
 
         'loc' : {
-#            'none' : 1,
+            'none' : 1,
 #            'name' : 1,
 #            'org_descr' : 1,
             'org_name' : 1,
@@ -55,7 +55,7 @@ class Tables:
         },
 
         'org' : {
-#            'none' : 1,
+            'none' : 1,
 #            'org_descr' : 1,
 #            'surname' : 1,
             'loc_name' : 1,
@@ -65,7 +65,7 @@ class Tables:
         },
 
         'per' : {
-#            'none' : 1,
+            'none' : 1,
             'name' : 1,
             'patronymic' : 1,
             'nickname' : 1,
