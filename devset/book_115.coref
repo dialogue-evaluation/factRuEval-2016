@@ -1,16 +1,12 @@
-92 10494
-name Bank of East Asia
-
-98 10489 10489
-surname Ху
-firstname Цзиньтао
-
-94 10499 10499
-surname Чэнь
-firstname Дэмин
+90 10481 10481 10481 10482 10493
+name Промышленный и коммерческий банк Китая
+name Industrial and Commercial Bank of China
 
 97 10487
 name Чикаго
+
+100 10492 10492
+name правительство Китая
 
 99 10490
 name США
@@ -18,20 +14,24 @@ name США
 91 10495 10495 10495
 name американское отделение Bank of East Asia
 
-90 10481 10481 10481 10482 10493
-name Промышленный и коммерческий банк Китая
-name Industrial and Commercial Bank of China
-
 95 10485
 name Калифорния
-
-100 10492 10492
-name правительство Китая
 
 93 10488 10496 10497 10498
 name Китай
 name КНР
 
+98 10489 10489
+firstname Цзиньтао
+surname Ху
+
+92 10494
+name Bank of East Asia
+
 96 10486
 name Нью-Йорк
+
+94 10499 10499
+surname Чэнь
+firstname Дэмин
 
