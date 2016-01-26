@@ -1,13 +1,13 @@
-169 11924 11911 11916
+169 11916 11911 11924
 firstname Фернандо
 surname Алонсо
 
 170 11912
 name Алонсо
 
-172 11914 11915
-name Раскассэ
+172 11915 11914
 name La Rascasse
+name Раскассэ
 
 173 11918 11913
 firstname Михаэль
@@ -21,12 +21,12 @@ firstname Фелипе
 surname Масса
 
 176 11922
-surname Райкконен
 firstname Кими
+surname Райкконен
 
 177 11923
-surname Уэббер
 firstname Марк
+surname Уэббер
 
 178 11925
 firstname Хуан Пабло
@@ -36,15 +36,15 @@ surname Монтойе
 name команда МакЛарен-Мерседес
 
 180 11927
-surname Култхард
 firstname Дэвид
+surname Култхард
 
 181 11928
 name команды Red Bull
 
 182 11929
-surname Мишлен
 firstname Эдуард
+surname Мишлен
 
 183 11930
 name группа компаний Michelin

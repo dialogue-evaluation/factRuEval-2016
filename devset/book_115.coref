@@ -1,6 +1,6 @@
-90 10481 10482 10493
-name Промышленный и коммерческий банк Китая
+90 10493 10482 10481
 name Industrial and Commercial Bank of China
+name Промышленный и коммерческий банк Китая
 
 91 10495
 name американское отделение Bank of East Asia
@@ -8,9 +8,9 @@ name американское отделение Bank of East Asia
 92 10494
 name Bank of East Asia
 
-93 10496 10488 10498 10497
-name Китай
+93 10497 10488 10498 10496
 name КНР
+name Китай
 
 94 10499
 firstname Дэмин
