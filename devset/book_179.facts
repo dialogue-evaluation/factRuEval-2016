@@ -1,0 +1,9 @@
+179-0 Occupation
+Person obj205 Марк
+Job span53369 рабочий
+Company obj207 цех окончательной обработки Vestas
+
+179-1 isPartOf
+Company obj207 цех окончательной обработки Vestas
+Company obj206 Vestas
+
