@@ -29,13 +29,13 @@ class EvaluationMatrix:
 
     allowed_tags = ['per', 'loc', 'org', 'locorg']
 
-    def __init__(self, std, test, calc, mode='regular',):
+    def __init__(self, std, test, calc, mode='regular'):
         """Initialize the matrix.
         
         std and test must be lists of objects from standard and test respectively
         mode must be either 'regular' or 'simple' and it determines whether locorgs are
         matched with orgs and locs or not
-        calc must be a priority/quality calculator object that supports values of """
+        calc must be a priority/quality calculator object used in the task at hand"""
 
         assert(mode == 'regular' or mode == 'simple')
         self.mode = mode
@@ -73,17 +73,57 @@ class EvaluationMatrix:
     def findSolution(self):
         """Runs the recursive search to find an optimal matching"""
         
-        q, matching = self._recursiveSearch(
+        q, pairs = self._recursiveSearch(
             [i for i in range(self.n_std)],
             [j for j in range(self.n_test)],
             []
             )
 
-        self.metrics['overall'] = self._evaluate(matching)
+        self.metrics['overall'] = self._evaluate(pairs)
         for tag in EvaluationMatrix.allowed_tags:
-            self.metrics[tag] = self._evaluate(matching, tag)
+            self.metrics[tag] = self._evaluate(pairs, tag)
 
-        return matching
+        # save matching data
+        self.logMatching(pairs)
+
+        return pairs
+
+    def logMatching(self, pairs):
+        """Saves matching data"""
+        self.matching = {}
+        self.matched_std = []
+        self.matched_test = []
+        for i, j in pairs:
+            s = self.std[i]
+            t = self.test[j]
+            self.matching[s] = t
+            self.matching[t] = s
+            self.matched_std.append(s)
+            self.matched_test.append(t)
+        self.unmatched_std = [s for s in self.std if not s in self.matched_std]
+        self.unmatched_test = [t for t in self.test if not t in self.matched_test]
+
+    def describeMatchingStd(self):
+        """Builds a detailed matching description for standard objects"""
+        return self._doDescribeMatching(self.matched_std, self.unmatched_std, False)
+
+    def describeMatchingTest(self):
+        """Builds a detailed matching description for test objects"""
+        return self._doDescribeMatching(self.matched_test, self.unmatched_test, True)
+
+    def _doDescribeMatching(self, matched, unmatched, is_swapped):
+        """Builds a detailed matching description with the given lookup tables"""
+        res = ''
+        for x in matched:
+            y = self.matching[x]
+            q = self.calc.quality(y, x) if is_swapped else self.calc.quality(x, y)
+            res += '{:.2f}\t{}\t=\t{}\n'.format(q, x.toInlineString(), y.toInlineString())
+
+        res += '\n'
+        for x in unmatched:
+            res += '0.00 {}\n'.format(x.toInlineString())
+
+        return res
 
     def _recursiveSearch(self, std, test, pairs):
         """
