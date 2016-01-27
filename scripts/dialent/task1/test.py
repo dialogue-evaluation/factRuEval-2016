@@ -37,9 +37,9 @@ class Test:
         # set the allowed tags for later
         self.allowed_tags = set(['org', 'per', 'loc', 'locorg'])
             
-        self.entities = {}
+        self.mentions = {}
         for tag in self.allowed_tags:
-            self.entities[tag] = []
+            self.mentions[tag] = []
             
         # read the file that should consist of lines like
         # [TAG] [START_SYMBOL_INDEX] [LENGTH]
@@ -54,7 +54,7 @@ class Test:
                     assert(len(parts) == 3)
                     tag = parts[0].lower()
                     assert(tag in self.allowed_tags)
-                    self.entities[tag].append(Interval(*parts[1:]))
+                    self.mentions[tag].append(Interval(*parts[1:]))
                 except Exception as e:
                     line_descr = '[{}] [START_SYMBOL_INDEX] [LENGTH]'.format(
                                 '/'.join(self.allowed_tags))
@@ -64,12 +64,12 @@ class Test:
                     
                     
     def makeTokenSets(self, standard, is_locorg_allowed=True):
-        """Create a dictionary of typed TokenSet objects corresponding to the entities,
+        """Create a dictionary of typed TokenSet objects corresponding to the mentions,
         using the provided standard data to tokenize the intervals"""
         
         res = dict([(x, []) for x in self.allowed_tags])
         for key in self.allowed_tags:
-            for interval in self.entities[key]:
+            for interval in self.mentions[key]:
                 ts = TokenSet([token
                               for token in standard.tokens
                                   if token.start >= interval.start

@@ -6,8 +6,8 @@
 #   <Python3 executable> t1_eval.py -s <std_dir> -t <test_dir> [-l]
 #       -s [std_dir]    - path to the standard files directory
 #       -t [test_dir]   - path to the response files directory
-#       -l              - if included, disables "locorg" entity evaluation
-#                         (such entities will be considered locations)
+#       -l              - if included, disables "locorg" mention evaluation
+#                         (such mentions will be considered locations)
 #       -h              - display this message
 #
 
@@ -26,8 +26,8 @@ def usage():
     print('<Python3 executable> t1_eval.py -s <std_dir> -t <test_dir> [-l]')
     print('    -s [std_dir]    - path to the standard files directory')
     print('    -t [test_dir]   - path to the response files directory')
-    print('    -l              - if included, disables "locorg" entity evaluation')
-    print('                      (such entities will be considered locations)')
+    print('    -l              - if included, disables "locorg" mention evaluation')
+    print('                      (such mentions will be considered locations)')
     print('    -h              - display this message')
 
 def main():

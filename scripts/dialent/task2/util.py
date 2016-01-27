@@ -62,6 +62,7 @@ def validateStandard(path):
     problematic_docs = set()
 
     n_by_tags = {}
+    n_by_attrs = {}
 
     for s in std:
         has_problematic = False
@@ -82,6 +83,12 @@ def validateStandard(path):
             # find all mention tags
             for m in e.mentions:
                 tag_set.add(m.tag)
+
+            for attr in e.attributes:
+                if attr.name in n_by_attrs:
+                    n_by_attrs[attr.name] += 1
+                else:
+                    n_by_attrs[attr.name] = 1
             
             tags = ' '.join(sorted(tag_set, key=lambda x: x))
 
@@ -102,4 +109,7 @@ def validateStandard(path):
     print('Object counts by type:')
     for key in n_by_tags.keys():
         print('{} - {}'.format(key, n_by_tags[key]))
+    print('Attribute counts by type:')
+    for key in n_by_attrs.keys():
+        print('{} - {}'.format(key, n_by_attrs[key]))
 
