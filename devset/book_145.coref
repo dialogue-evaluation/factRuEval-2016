@@ -3,7 +3,7 @@ firstname Фернандо
 surname Алонсо
 
 170 11912
-name Алонсо
+name Монако
 
 172 11914 11915
 name La Rascasse
@@ -14,7 +14,8 @@ firstname Михаэль
 surname Шумахер
 
 174 11919 11921
-name команда Феррари
+descriptor команда
+name Феррари
 
 175 11920
 firstname Фелипе
@@ -29,23 +30,27 @@ firstname Марк
 surname Уэббер
 
 178 11925
-firstname Хуан Пабло
+firstname Хуану
+firstname1 Пабло
 surname Монтойе
 
 179 11926
-name команда МакЛарен-Мерседес
+descriptor команда
+name МакЛарен-Мерседес
 
 180 11927
 firstname Дэвид
 surname Култхард
 
 181 11928
-name команды Red Bull
+descriptor команда
+name Red Bull
 
 182 11929
 firstname Эдуард
 surname Мишлен
 
 183 11930
-name группа компаний Michelin
+descriptor группа компаний
+name Michelin
 

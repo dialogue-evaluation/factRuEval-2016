@@ -3,19 +3,23 @@ name Россия
 wikidata 
 
 320 13500
-name Центр современной культуры Гараж
+descriptor центр
+descriptor центр современной культуры
+name Гараж
 wikidata 
 
 321 13499 13519
+descriptor автономная некоммерческая организация
+descriptor некоммерческая организация 
+descriptor организация
 name Global Cultural Project
-name автономная некоммерческая организация Global Cultural Project
-name некоммерческая организация Global Cultural Project
 
 322 13513
 name РГГУ
 wikidata 
 
 323 13512
+descriptor кафедра
 name кафедра социальных коммуникаций и технологий РГГУ
 wikidata 
 
@@ -28,6 +32,7 @@ name РАН
 wikidata 
 
 326 13510
+descriptor институт
 name Институт этнологии и антропологии РАН
 wikidata 
 
@@ -36,6 +41,7 @@ firstname Валерий
 surname Тишков
 
 328 13520
+descriptor институт
 name Российский институт культурологи
 wikidata 
 
@@ -56,11 +62,14 @@ firstname Йозеф
 surname Бойс
 
 333 13524
+descriptor театр
 name театр им . Йозефа Бойса
 wikidata 
 
 334 13528
-name экспериментальный театр Театр.doc
+descriptor театр
+descriptor экспериментальный театр 
+name Театр.doc
 wikidata 
 
 335 13521
@@ -72,7 +81,9 @@ name Венгрия
 wikidata 
 
 337 13527
-name субкультурная партия Dog with two tails
+descriptor партия
+descriptor субкультурная партия
+name Dog with two tails
 wikidata 
 
 338 13508
@@ -84,7 +95,8 @@ name Великобритания
 wikidata 
 
 340 13506
-firstname проект Mushroom works
+descriptor проект
+firstname Mushroom works
 surname 
 
 341 13503
@@ -96,6 +108,8 @@ name США
 wikidata 
 
 343 13526
+descriptor агентство
+descriptor креативное агентство
 name креативное агентство Kollektiv
 wikidata 
 
@@ -104,6 +118,8 @@ firstname Крис
 surname Хелмбрехт
 
 345 13529
+descriptor служба
+name PR-служба
 name PR-служба конференции
 wikidata 
 

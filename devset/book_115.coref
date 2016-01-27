@@ -1,8 +1,11 @@
 90 10481 10482 10493
+descriptor банк
 name Industrial and Commercial Bank of China
 name Промышленный и коммерческий банк Китая
 
 91 10495
+descriptor американское отделение
+descriptor отделение
 name американское отделение Bank of East Asia
 
 92 10494
@@ -33,5 +36,6 @@ surname Ху
 name США
 
 100 10492
+descriptor правительство
 name правительство Китая
 

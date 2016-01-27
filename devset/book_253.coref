@@ -20,6 +20,7 @@ name Екатеринбург
 name Свердловск
 
 298 17471 17491 17500
+descriptor область
 name Свердловская область
 
 299 17467 17497
@@ -31,30 +32,37 @@ name Новый Регион — Екатеринбург
 wikidata 
 
 301 17501
+descriptor дворец
 name Дворец молодёжи
 wikidata 
 
 302 17468 17472
+descriptor партия
 name КПСС
-name партия
 
 303 17469 17473
-name обком партии
+descriptor обком
+descriptor обком партии
 name свердловский обком КПСС
 
 304 17462 17478
+descriptor президентский центр
+descriptor центр
 name президентский центр наследия
 wikidata 
 
 305 17477
+descriptor центр
 name Уральский центр
 wikidata 
 
 307 17463
-name бизнес-центр Демидов
+descriptor бизнес-центр
+name Демидов
 wikidata 
 
 308 17464
+descriptor памятник
 name памятник первому президенту России Борису Николаевичу Ельцину
 wikidata 
 
