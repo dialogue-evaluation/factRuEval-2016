@@ -11,10 +11,13 @@ name Лента.ру
 wikidata 
 
 272 20383
+descriptor правительство
 name украинское правительство
 wikidata 
 
 273 12692
+descriptor банк
+descriptor национальный банк
 name Национальный банк Украины
 wikidata 
 
@@ -23,10 +26,14 @@ name Интерфакс
 wikidata 
 
 275 12693
+descriptor министерство
+descriptor министерство финансов
 name российское министерство финансов
 wikidata 
 
 276 12695 12696
+descriptor атомная электростанция
+descriptor электростанция
 name ХАЭС
 name Хмельницкая атомная электростанция
 
