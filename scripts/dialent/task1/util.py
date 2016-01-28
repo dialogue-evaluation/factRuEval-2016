@@ -78,7 +78,7 @@ class ResponseGenerator:
         """
             Build a partial response assotiated with the given tag
 
-            tag - entity type tag
+            tag - mention type tag
             token_sets - a list of TokenSet objects of the given tag
         """
         intervals = [x.toInterval() for x in token_sets]
@@ -103,7 +103,7 @@ class Evaluator:
 
             std_dir - standard markup files directory
             test_dir - responese directory
-            is_locorg_allowed - enables/disables 'locorg' entity type
+            is_locorg_allowed - enables/disables 'locorg' mention type
         """
 
         res,tmp = self._doEvaluate(std_dir, test_dir, is_locorg_allowed)
@@ -132,7 +132,7 @@ class Evaluator:
 
             std_dir - standard markup files directory
             test_dir - responese directory
-            is_locorg_allowed - enables/disables 'locorg' entity type
+            is_locorg_allowed - enables/disables 'locorg' mention type
         """
 
         tmp,dct = self._doEvaluate(std_dir, test_dir, is_locorg_allowed)
@@ -166,14 +166,14 @@ class Evaluator:
         """
             Evaluate the submission by comparing it to the standard
 
-            Returns a dictionary of metrics by entity type.
+            Returns a dictionary of metrics by mention type.
             Metrics include precision, recall, f1,
             true positive count, standard size and test size
             in that order.
 
             std_dir - standard markup files directory
             test_dir - response files directory
-            is_locorg_allowed - enables/disables 'locorg' entity type
+            is_locorg_allowed - enables/disables 'locorg' mention type
         """
         
         unique_names = set()
@@ -223,14 +223,14 @@ class Evaluator:
         """
             Compare the provided standard and test markup.
 
-            Returns a dictionary of metrics by entity type.
+            Returns a dictionary of metrics by mention type.
             Metrics include precision, recall, f1,
             true positive count, standard size and test size
             in that order.
 
             standard - loaded standard document
             test - loaded test document
-            is_locorg_allowed - enables/disables 'locorg' entity type
+            is_locorg_allowed - enables/disables 'locorg' mention type
         """
         s = standard.makeTokenSets(is_locorg_allowed)
         t = test.makeTokenSets(standard, is_locorg_allowed)
@@ -434,7 +434,7 @@ class MatchingOptimizer:
         
         summ = tp + fp + fn
 
-        # summ can be equal to zero in cases when the entity has no 'priority' spans like
+        # summ can be equal to zero in cases when the mention has no 'priority' spans like
         # org_name. In these cases, we will just compare the annotations with no weights
         return tp / summ if summ > 0 else self._calculatePairPriority(s,t)
 

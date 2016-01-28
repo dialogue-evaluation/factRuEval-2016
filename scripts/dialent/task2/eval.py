@@ -2,8 +2,6 @@
 
 import os
 
-import numpy as np
-
 from dialent.common.evalmatrix import EvaluationMatrix
 from dialent.common.metrics import Metrics
 
@@ -21,13 +19,15 @@ class Evaluator:
        score in a negative way
      - simple: unmatched values in test do not affect the score"""
 
+    stat_tags = ['per', 'loc', 'org', 'overall']
+
     def __init__(self, mode='regular'):
         """Initialize the object"""
         assert(mode == 'regular' or mode == 'simple')
         self.mode = mode
 
 
-    def evaluate(self, std_path, test_path):
+    def evaluate(self, std_path, test_path, output_path=''):
         """Run evaluation on all files in the given directories"""
         std = loadAllStandard(std_path)
         test = loadAllTest(test_path)
@@ -37,17 +37,20 @@ class Evaluator:
 
         assert(len(diff) == 0)
         res = []
-        for tag in EvaluationMatrix.allowed_tags + ['overall']:
+        for tag in Evaluator.stat_tags:
             res.append(Metrics())
 
         for i, s in enumerate(std):
+            if not s.has_coref:
+                # do not compare documents without a .coref file
+                # this is just for convenience
+                continue
             m_tuple = self.evaluateDocument(s, test[i])
+            self.printReport(s.name, output_path)
             for i, val in enumerate(res):
                 val.add(m_tuple[i])
             
-        print('Type    ' + Metrics.header())
-        for i, tag in enumerate(EvaluationMatrix.allowed_tags + ['overall']):
-            print('{:8} '.format(tag.upper()) + res[i].toLine())
+        print(self.buildMetricsTable(res))
 
     def evaluateByDocument(self, std_path, test_path):
         """Run evaluation on all files in the given directories. Print output by
@@ -64,18 +67,57 @@ class Evaluator:
             res = self.evaluateDocument(s, test[i])
             print('\n' + s.name)
             print('Type    ' + Metrics.header())
-            for i, tag in enumerate(EvaluationMatrix.allowed_tags + ['overall']):
+            for i, tag in enumerate(Evaluator.stat_tags):
                 print('{:8} '.format(tag.upper()) + res[i].toLine())
             
     def evaluateDocument(self, s, t):
         """Compare standard markup s with test markup t and evaluate T.
         Returns the typical metrics tuple"""
 
-        em = EvaluationMatrix(s.entities, t.entities, EntityQualityCalculator())
+        em = EvaluationMatrix(s.entities, t.entities,
+                 EntityQualityCalculator(forgive_extra_values = (self.mode=='simple')))
         em.findSolution()
-        return (em.metrics['per'], em.metrics['loc'],
-                em.metrics['org'], em.metrics['locorg'],
-                em.metrics['overall'])
+        self.em = em
+
+        self.metrics_tuple = (em.metrics['per'], em.metrics['loc'],
+                em.metrics['org'], em.metrics['overall'])
+        self.metrics_list = list(self.metrics_tuple)
+
+        return self.metrics_tuple
+
+    # Metrics and reports
+
+    def buildMetricsTable(self, metrics_list):
+        """Build a table from the provided metrics for the output"""
+        assert(len(metrics_list) == len(Evaluator.stat_tags))
+        res = 'Type    ' + Metrics.header()
+        for i, tag in enumerate(Evaluator.stat_tags):
+            res += '\n{:8} '.format(tag.upper()) + metrics_list[i].toLine()
+
+        return res
+
+    def buildReport(self):
+        """Builds a detailed comparison report"""
+        res = ''
+        res += '------STANDARD------\n'
+        res += self.em.describeMatchingStd() + '\n\n';
+        res += '--------TEST--------\n'
+        res += self.em.describeMatchingTest() + '\n\n';
+        res += '-------METRICS------\n'
+        res += self.buildMetricsTable(
+                self.metrics_list
+            )
+
+        return res
+
+    def printReport(self, name, out_dir):
+        if len(out_dir) == 0:
+            return
+
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, name + '.report.txt'), 'w', encoding='utf-8') as f:
+            f.write(self.buildReport())
+
         
 #########################################################################################
 
@@ -129,8 +171,9 @@ class EntityQualityCalculator:
                         unmatched_test.remove(t_attr)
 
         tp = len(matched_std)
-        fp = len(unmatched_test) if self.forgive_extra_values else 0
+        fp = len(unmatched_test) if not self.forgive_extra_values else 0
         fn = len(unmatched_std)
 
         d = float(tp + fn + fp)
+
         return (tp / d) if d > 0 else 0.0

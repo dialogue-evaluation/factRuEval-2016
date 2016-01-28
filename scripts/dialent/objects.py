@@ -201,7 +201,7 @@ class Attribute:
 
     def __init__(self):
         self.name = ''
-        self.value = ''
+        self.values = set()
 
     # static build methods:
     @classmethod
@@ -218,8 +218,9 @@ class Attribute:
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        instance.value = ' '.join(parts[1:]).lower()
-        instance.value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        value = ' '.join(parts[1:]).lower()
+        value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        instance.values.add(value)
 
         return instance
 
@@ -235,23 +236,53 @@ class Attribute:
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        instance.value = parts[1].strip().lower()
-        instance.value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        value = parts[1].strip().lower()
+        value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        instance.values.add(value)
 
         return instance
+
+    @classmethod
+    def merge(cls, attr_list, new_name):
+        """Merge values from the list of attributes, and assign a new name. Returns a new
+        instance"""
+
+        instance = cls()
+        instance.name = new_name
+        for attr in attr_list:
+            instance.values.update(attr.values)
+
+        return instance
+
+    def buildAlternatives(self, descr):
+        """Build full alternative list from current values and descriptors."""
+        raw_values = self.values
+        self.values = set()
+        for x in raw_values:
+            for y in descr.values:
+                self.values.add(x)
+                if (' ' + y + ' ') in (' ' + x + ' '):
+                    # for those descriptors already included in a name
+                    # added spaces to do a full-word search
+                    continue
+
+                self.values.add(x + ' ' + y)
+                self.values.add(y + ' ' + x)
+
+    def trimName(self):
+        """Removes any digits following the attribute name"""
+        self.name = self.name.strip('1234567890')
         
     def matches(self, other):
         """Returns true if a set of value of other corresponds to a set of values of this"""
-        # TODO this is a stub to be reworked after the export format is finalized
-        return self.name == other.name and self.value == other.value
+        return self.name == other.name and len(self.values.intersection(other.values)) > 0
 
     def toTestString(self):
         """Creates a test representation of this attribute"""
-
-        return '{} : {}'.format(self.name, self.value)
+        return '\n'.join(['{} : {}'.format(self.name, x) for x in self.values])
 
     def __repr__(self):
-        return '{} : {}'.format(self.name, self.value)
+        return '{} : {}'.format(self.name, ' | '.join( self.values ))
 
     def __str__(self):
         return self.__repr__()
@@ -291,6 +322,8 @@ class Entity:
             if len(line) == 0:
                 continue
             instance.attributes.append(Attribute.fromStandard([line]))
+
+        instance.processAttributes()
         instance._load_id_line(lines[0], mention_dict, span_dict)
 
         return instance
@@ -315,8 +348,45 @@ class Entity:
                 continue
             instance.attributes.append(Attribute.fromTest(line))
         instance.tag = lines[0].lower()
+        if instance.tag == 'locorg':
+            # all locorgs are considered locs for this task
+            instance.tag = 'loc'
 
         return instance
+
+    def processAttributes(self):
+        """Merge attributes with similar names, remove suffixes from the names and create
+        alternatives"""
+        raw_attributes = self.attributes
+        self.attributes = []
+        names = set([x.name for x in raw_attributes])
+        descriptors = []
+
+        # Merge all attributes of the same name into alternatives, except descriptors
+        for name in names:
+            attr_by_name = [x for x in raw_attributes if x.name == name]
+            if name.endswith('descr') or name.endswith('descriptor'):
+                descriptors.extend(attr_by_name)
+            elif name != 'wikidata':
+                # wikidata must be ignored for all the tracks
+                self.attributes.append(Attribute.merge(attr_by_name, name))
+
+        # Add descriptors to the list of alternatives
+        if len(descriptors) > 0:
+            descr = Attribute.merge(descriptors, 'descr')
+            for attr in self.attributes:
+                attr.buildAlternatives(descr)
+
+        # Trim names ending with digits
+        for attr in self.attributes:
+            attr.trimName()
+
+    def toInlineString(self):
+        """Creates an inline description of this entity"""
+        res = self.tag.upper()
+        res += ' [' + ', '.join([str(x) for x in self.attributes]) + ']'
+
+        return res
 
     def toTestString(self):
         """Creates a test representation of this entity"""
@@ -353,8 +423,13 @@ class Entity:
         # but arguably it should be
         # assert(len(self.mentions) > 0)
         
-        if len(self.mentions) > 0:
-            self.tag = self.mentions[0].tag
+        tags = set([x.tag for x in self.mentions])
+        if 'locorg' in tags:
+            # for this task all locorg objects are condidered loc
+            self.tag = 'loc'
+        else:
+            assert(len(tags)==1)
+            self.tag = tags.pop()
 
     def __repr__(self):
         res = ''

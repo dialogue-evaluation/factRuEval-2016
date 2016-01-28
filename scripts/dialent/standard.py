@@ -27,6 +27,7 @@ class Standard:
     
     def __init__(self, name, path='.'):
         try:
+            self.has_coref = True
             full_name = os.path.join(path, name)
             self.loadTokens(full_name + '.tokens')
             self.loadSpans(full_name + '.spans')
@@ -173,6 +174,7 @@ class Standard:
             open(filename, 'r', encoding='utf-8')
         except:
             # there are currently some documents with no .coref layer. This is temporary
+            self.has_coref = False
             return
         
         with open(filename, 'r', encoding='utf-8') as f:
@@ -188,7 +190,7 @@ class Standard:
                     buffer += line + '\n'
                 
             if len(buffer) > 0:
-                self.entities.append(Entity.fromTest(buffer))
+                self.entities.append(Entity.fromStandard(buffer, self._mention_dict, self._span_dict))
 
     def loadText(self, filename):
         """Load text from the associated text file"""
