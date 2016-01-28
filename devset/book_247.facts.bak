@@ -1,0 +1,21 @@
+247-0 Deal
+Company obj285 администрация Кремля
+Company obj288 RU-CENTER
+
+247-1 Deal
+Company obj287 администрация Екатеринбурга
+Company obj288 RU-CENTER
+
+247-2 isPartOf
+Company obj285 администрация Кремля
+Company obj284 Кремль
+
+247-3 isPartOf
+Company obj287 администрация Екатеринбурга
+Company obj286 Екатеринбург
+
+247-4 Occupation
+Person obj291 Щеголёв Игорь
+Job span27431 главы
+Company obj290 Минкомсвязи
+
