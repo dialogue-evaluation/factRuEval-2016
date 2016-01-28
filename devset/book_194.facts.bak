@@ -1,0 +1,9 @@
+194-0 Deal
+Company obj269 Россия
+Company obj272 украинское правительство
+Company obj273 Национальный банк Украины
+
+194-1 isPartOf
+Company obj272 украинское правительство
+Company obj270 Украина
+
