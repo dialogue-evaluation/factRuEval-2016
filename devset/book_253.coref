@@ -1,7 +1,7 @@
 292 17466 17470 17476 17480 17482 17483 17488 17489 17493 17495 17502 17505 17507
 firstname Борис
 patronymic Ельцин
-surname Николаевич
+lastname Николаевич
 
 293 17481 17490
 firstname Наина
@@ -9,7 +9,7 @@ patronymic Иосифовна
 
 294 17485
 firstname Дмитрий
-surname Медведев
+lastname Медведев
 
 296 17465 17486 17487 17494 17496 17498
 name РФ
@@ -68,9 +68,9 @@ wikidata
 
 309 17479
 firstname Георгий
-surname Франгулян
+lastname Франгулян
 
 310 17474 17492
 firstname Александр
-surname Мишарин
+lastname Мишарин
 

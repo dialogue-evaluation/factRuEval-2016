@@ -1,6 +1,6 @@
 169 11911 11916 11924
 firstname Фернандо
-surname Алонсо
+lastname Алонсо
 
 170 11912
 name Монако
@@ -11,7 +11,7 @@ name Раскассэ
 
 173 11913 11918
 firstname Михаэль
-surname Шумахер
+lastname Шумахер
 
 174 11919 11921
 descriptor команда
@@ -19,20 +19,20 @@ name Феррари
 
 175 11920
 firstname Фелипе
-surname Масса
+lastname Масса
 
 176 11922
 firstname Кими
-surname Райкконен
+lastname Райкконен
 
 177 11923
 firstname Марк
-surname Уэббер
+lastname Уэббер
 
 178 11925
 firstname Хуану
 firstname1 Пабло
-surname Монтойе
+lastname Монтойе
 
 179 11926
 descriptor команда
@@ -40,7 +40,7 @@ name МакЛарен-Мерседес
 
 180 11927
 firstname Дэвид
-surname Култхард
+lastname Култхард
 
 181 11928
 descriptor команда
@@ -48,7 +48,7 @@ name Red Bull
 
 182 11929
 firstname Эдуард
-surname Мишлен
+lastname Мишлен
 
 183 11930
 descriptor группа компаний
