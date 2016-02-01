@@ -1,0 +1,20 @@
+349-0 Occupation
+Person obj764 Нетаньяху Биньямин
+Job span28573 глава
+Company obj766 правительство Израиля
+
+349-1 Occupation
+Person obj795 Эрекат Саеб
+Job span28601 Глава
+Company obj797 палестинская делегация
+
+349-2 Occupation
+Person obj764 Нетаньяху Биньямин
+Job span28577 премьер
+Company obj768 Израиль
+Сложность повышенная
+
+349-3 Deal
+Company obj766 правительство Израиля
+Company obj769 Иерусалим
+
