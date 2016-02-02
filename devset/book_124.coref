@@ -1,5 +1,5 @@
 114 10519 10530
-descriptor штата
+descriptor штат
 name Аризона
 
 115 10520 10533 10546
@@ -11,11 +11,11 @@ name США
 
 117 10523 10525 10545
 firstname Джаред
-surname Лофнер
+lastname Лофнер
 
 118 10531 10543 10544
 firstname Гэбриэль
-surname Гиффордс
+lastname Гиффордс
 
 119 10524
 descriptor город
@@ -31,11 +31,11 @@ name Палата представителей Конгресса США
 
 122 10536 10537
 firstname Барак
-surname Обама
+lastname Обама
 
 123 10539
 firstname Мишель
-surname Обама
+lastname Обама
 
 124 10538 10540
 descriptor дом

@@ -25,7 +25,7 @@ wikidata
 
 324 13509
 firstname Виктор
-surname Майклсон
+lastname Майклсон
 
 325 13511
 name РАН
@@ -38,7 +38,7 @@ wikidata
 
 327 13514
 firstname Валерий
-surname Тишков
+lastname Тишков
 
 328 13520
 descriptor институт
@@ -47,11 +47,11 @@ wikidata
 
 329 13515
 firstname Кирилл
-surname Разлогов
+lastname Разлогов
 
 330 13516
 firstname Светлана
-surname Яковлева
+lastname Яковлева
 
 331 13504 13518
 name Германия
@@ -59,11 +59,11 @@ wikidata
 
 332 13517
 firstname Йозеф
-surname Бойс
+lastname Бойс
 
 333 13524
 descriptor театр
-name театр им . Йозефа Бойса
+name театр им. Йозефа Бойса
 wikidata 
 
 334 13528
@@ -74,7 +74,7 @@ wikidata
 
 335 13521
 firstname Георг
-surname Жено
+lastname Жено
 
 336 13522
 name Венгрия
@@ -88,7 +88,7 @@ wikidata
 
 338 13508
 firstname Гергей
-surname Ковач
+lastname Ковач
 
 339 13507
 name Великобритания
@@ -97,11 +97,11 @@ wikidata
 340 13506
 descriptor проект
 firstname Mushroom works
-surname 
+lastname 
 
 341 13503
 firstname Ннека
-surname Угбома
+lastname Угбома
 
 342 13505
 name США
@@ -115,7 +115,7 @@ wikidata
 
 344 13501
 firstname Крис
-surname Хелмбрехт
+lastname Хелмбрехт
 
 345 13529
 descriptor служба

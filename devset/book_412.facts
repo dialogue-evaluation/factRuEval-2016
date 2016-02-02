@@ -1,0 +1,11 @@
+412-0 Occupation
+Person obj578 Фрадков Михаил
+Job span29250 Премьер-министр
+Company obj577 Россия
+
+412-1 Deal
+Person obj578 Фрадков Михаил
+Company obj579 парижский клуб
+Модальность возможность
+Company obj577 Россия
+
