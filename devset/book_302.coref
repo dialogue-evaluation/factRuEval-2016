@@ -75,14 +75,14 @@ wikidata
 name Хабаровск
 wikidata 
 
-556 17590
-descriptor округ
-descriptor федеральный округ
-name Дальневосточный федеральный округ
-wikidata 
-
 557 17577
 descriptor правительство
 name правительство РФ
+wikidata 
+
+1219 17590 45839
+descriptor округ
+descriptor федеральный округ
+name Дальневосточный федеральный округ
 wikidata 
 
