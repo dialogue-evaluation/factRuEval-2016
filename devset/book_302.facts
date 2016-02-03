@@ -1,0 +1,20 @@
+302-0 Occupation
+Person obj547 Шемелев Александр
+Job span33945 вице-губернатор
+Company obj542 Приморский край | Приморье
+
+302-1 Occupation
+Person obj548 Дарькин Сергей
+Company obj542 Приморский край | Приморье
+Job span68728 губернатор
+
+302-2 Occupation
+Person obj546 Беспалов Владимир
+Job span33961 лидер
+Company obj551 фракция КПРФ
+
+302-3 Occupation
+Person obj549 Ишаев Виктор
+Job span33977 полпреда президента | span76595 полпреда президента РФ в округе | span76594 полпреда
+Company obj1219 Дальневосточный федеральный округ
+
