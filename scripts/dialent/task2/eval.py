@@ -35,7 +35,10 @@ class Evaluator:
         diff = set([x.name for x in std]).symmetric_difference(
             set([y.name for y in test]))
 
-        assert(len(diff) == 0)
+        if len(diff) > 0:
+            print('Warning: missing files :\n  {}'.format('\n  '.join(diff)))
+            std = [s for s in std if s.name not in diff]
+            test = [t for t in test if t.name not in diff]
         res = []
         for tag in Evaluator.stat_tags:
             res.append(Metrics())
