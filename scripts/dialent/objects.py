@@ -431,6 +431,9 @@ class Entity:
             # there can be no other mutlitype entities
             assert(len(tags)==1)
             self.tag = tags.pop()
+            
+            if self.tag == 'locorg':
+                self.tag = 'loc'
 
     def __repr__(self):
         res = ''
