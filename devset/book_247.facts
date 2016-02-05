@@ -1,11 +1,3 @@
-247-0 Deal
-Company obj285 администрация Кремля
-Company obj288 RU-CENTER
-
-247-1 Deal
-Company obj287 администрация Екатеринбурга
-Company obj288 RU-CENTER
-
 247-2 isPartOf
 Company obj285 администрация Кремля
 Company obj284 Кремль
@@ -18,4 +10,14 @@ Company obj286 Екатеринбург
 Person obj291 Щеголёв Игорь
 Job span27431 главы
 Company obj290 Минкомсвязи
+
+247-5 Deal
+Participant obj285 администрация Кремля
+Participant obj288 RU-CENTER
+Type купля/продажа
+
+247-6 Deal
+Participant obj287 администрация Екатеринбурга
+Participant obj288 RU-CENTER
+Type купля/продажа
 

@@ -8,7 +8,8 @@ Person obj45 Медведев Дмитрий
 Job span22754 президент
 Company obj42 Россия
 
-99-2 Deal
-Company obj43 Китай
-Company obj42 Россия
+99-3 Deal
+Participant obj42 Россия
+Participant obj43 КНР | Китай | Поднебесная
+Type купля/продажа
 
