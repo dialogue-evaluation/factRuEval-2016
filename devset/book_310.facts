@@ -2,11 +2,13 @@
 Person obj664 Видениус Майкл
 Company obj666 MySQL
 
-310-2 Deal
+310-1 Deal
 Company obj662 Oracle
 Company obj663 Sun | Sun Microsystems
+Type купля/продажа
 
-310-3 Deal
+310-2 Deal
 Company obj663 Sun | Sun Microsystems
 Company obj666 MySQL
+Type купля/продажа
 
