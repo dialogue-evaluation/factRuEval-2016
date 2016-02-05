@@ -26,6 +26,7 @@ class Standard:
      """
     
     def __init__(self, name, path='.'):
+        self.name = name
         try:
             self.has_coref = True
             full_name = os.path.join(path, name)
@@ -34,10 +35,13 @@ class Standard:
             self.loadMentions(full_name + '.objects')
             self.loadCoreference(full_name + '.coref')
             self.loadText(full_name + '.txt')
-            self.name = name
         except Exception as e:
             print('Failed to load the standard of {}:'.format(name))
             print(e)
+            # reset the document so it has no impact on the comparison
+            self.mentions = []
+            self.entities = []
+            self.facts = []
     
     def loadTokens(self, filename):
         """Load the data from a file with the provided name

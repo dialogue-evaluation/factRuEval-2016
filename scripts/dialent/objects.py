@@ -424,10 +424,11 @@ class Entity:
         # assert(len(self.mentions) > 0)
         
         tags = set([x.tag for x in self.mentions])
-        if 'locorg' in tags:
+        if len(tags) > 1 and ('locorg' in tags or 'loc' in tags):
             # for this task all locorg objects are condidered loc
             self.tag = 'loc'
         else:
+            # there can be no other mutlitype entities
             assert(len(tags)==1)
             self.tag = tags.pop()
 
