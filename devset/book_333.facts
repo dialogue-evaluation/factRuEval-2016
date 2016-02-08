@@ -1,7 +1,7 @@
 333-0 Occupation
 Person obj532 Гачечиладзе Леван
-Job span28011 депутатом парламента | span28010 депутатом | span76597 депутатом парламента от партии «Новые правые»
-Company obj534 Новые правые | obj1220 парламент
+Job span28010 депутатом
+Where obj1220 парламент
 
 333-1 Occupation
 Person obj532 Гачечиладзе Леван
@@ -18,4 +18,8 @@ Company obj533 Грузия
 Person obj538 Зурабишвили Саломе
 Job span28025 глава
 Company obj537 Путь Грузии
+
+333-4 Occupation
+Who obj532 Гачечиладзе Леван
+Where obj534 Новые правые
 

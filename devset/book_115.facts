@@ -1,7 +1,3 @@
-115-0 Deal
-Company obj90 Промышленный и коммерческий банк Китая
-Company obj91 американское отделение Bank of East Asia
-
 115-1 Occupation
 Person obj98 Ху Цзиньтао
 Job span22863 председателя
@@ -11,4 +7,13 @@ Company obj93 Китай
 Person obj94 Чэнь Дэмин
 Job span22872 министр торговли
 Company obj93 Китай
+
+115-3 Deal
+Participant obj90 Industrial and Commercial Bank of China | Промышленный и коммерческий банк Китая
+Participant obj91 американское отделение Bank of East Asia
+Type купля/продажа
+
+115-4 Ownership
+Owner obj100 правительство Китая
+Property obj90 Industrial and Commercial Bank of China | Промышленный и коммерческий банк Китая
 

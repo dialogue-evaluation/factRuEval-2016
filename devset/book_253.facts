@@ -8,10 +8,6 @@ Person obj292 Николаевич Борис Ельцин
 Job span33782 первого секретаря
 Company obj303 обком партии
 
-253-2 isPartOf
-Company obj303 обком партии
-Company obj302 КПСС
-
 253-3 Occupation
 Person obj310 Мишарин Александр
 Job span33785 губернатора | span33825 глава

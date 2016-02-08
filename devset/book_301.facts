@@ -1,7 +1,8 @@
 301-0 Occupation
 Person obj498 Нетаньяху Беньямин
-Job span27826 Премьер-министр
+Job span27826 Премьер-министр | span27844 премьер
 Сложность повышенная
+Where obj500 Израиль
 
 301-1 Occupation
 Person obj515 Меридор Дан
