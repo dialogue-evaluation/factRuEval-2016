@@ -9,6 +9,7 @@ from dialent.objects import Token
 from dialent.objects import Span
 from dialent.objects import Mention
 from dialent.objects import Entity
+from dialent.objects import Fact
 from dialent.objects import Interval
 from dialent.objects import TokenSet
 
@@ -23,17 +24,20 @@ class Standard:
      - 'NAME.spans'
      - 'NAME.objects'
      - 'NAME.coref'
+     - 'NAME.facts'
      """
     
     def __init__(self, name, path='.'):
         self.name = name
         try:
             self.has_coref = True
+            self.has_facts = True
             full_name = os.path.join(path, name)
             self.loadTokens(full_name + '.tokens')
             self.loadSpans(full_name + '.spans')
             self.loadMentions(full_name + '.objects')
             self.loadCoreference(full_name + '.coref')
+            self.loadFacts(full_name + '.facts')
             self.loadText(full_name + '.txt')
         except Exception as e:
             print('Failed to load the standard of {}:'.format(name))
@@ -126,7 +130,7 @@ class Standard:
                             index, filename))
                 
                 
-                token_ids = [int(x) for x in filtered_right[:new_span.ntokens]]
+                token_ids = [x.strip() for x in filtered_right[:new_span.ntokens]]
                 new_span.tokens = [self._token_dict[x] for x in token_ids]
                 new_span.text = ' '.join(filtered_right[new_span.ntokens:])
                 new_span.text = new_span.text.replace('\n', '')
@@ -159,8 +163,8 @@ class Standard:
                             index, filename))
                 
                 try:
-                    mention_id = int(line[0])
-                    span_indices = [int(descr) for descr in line[2:]]
+                    mention_id = line[0].strip()
+                    span_indices = [descr.strip() for descr in line[2:]]
                 except Exception as e:
                     raise Exception('Invalid mention or span id: line {} of file {}:\n{}'.format(
                         index, filename, e))
@@ -196,6 +200,37 @@ class Standard:
             if len(buffer) > 0:
                 self.entities.append(Entity.fromStandard(buffer, self._mention_dict, self._span_dict))
 
+        self._entity_dict = {}
+        for ent in self.entities:
+            self._entity_dict[ent.id] = ent
+
+    def loadFacts(self, filename):
+        """Load facts from the associated file"""
+        self.facts = []
+
+        try:
+            open(filename, 'r', encoding='utf-8')
+        except:
+            # there are currently some documents with no .coref layer. This is temporary
+            self.has_facts = False
+            return
+        
+        with open(filename, 'r', encoding='utf-8') as f:
+            buffer = ''
+            for raw_line in f:
+                line = raw_line.strip(' \t\n\r')
+                if len(line) == 0:
+                    if len(buffer) > 0:
+                        e = Fact.fromStandard(buffer, self._entity_dict, self._span_dict)
+                        self.facts.append(e)
+                        buffer = ''
+                else:
+                    buffer += line + '\n'
+
+            if len(buffer) > 0:
+                self.facts.append(Fact.fromStandard(buffer, self._entity_dict, self._span_dict))
+
+
     def loadText(self, filename):
         """Load text from the associated text file"""
         with open(filename, 'r', encoding='utf-8') as f:
@@ -211,7 +246,7 @@ class Standard:
         if is_locorg_allowed:
             allowed_tags.add('locorg')
             
-        res = dict([(x, []) for x in allowed_tags])
+        res = []
         for mention in self.mentions:
             key = mention.tag
             if key == 'locorg' and not is_locorg_allowed:
@@ -219,17 +254,18 @@ class Standard:
             assert(key in allowed_tags)
             ts = TokenSet(
                     [x for span in mention.spans for x in span.tokens],
-                    key)
+                    key, self.text)
+
             for span in mention.spans:
                 for token in span.tokens:
                     mark = Tables.getMark(ts.tag, span.tag)
                     ts.setMark(token, mark)
-            res[key].append(ts)
+            res.append(ts)
 
         # find and mark organizations embedded within other organizations
-        all_orgs = list(res['org'])
+        all_orgs = [x for x in res if x.tag == 'org']
         if is_locorg_allowed:
-            all_orgs.extend(res['locorg'])
+            all_orgs.extend([x for x in res if x.tag == 'locorg'])
         for org in all_orgs:
             org.findParents(all_orgs)
 

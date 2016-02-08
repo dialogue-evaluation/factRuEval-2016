@@ -75,7 +75,7 @@ class Test:
                                   if token.start >= interval.start
                                       and token.end <= interval.end
                                       and not token.isIgnored()],
-                             key)
+                             key, standard.text)
                 if not is_locorg_allowed and key == 'locorg':
                     ts.tag = 'loc'
                 res[ts.tag].append(ts)

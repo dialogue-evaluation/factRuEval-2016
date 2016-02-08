@@ -54,24 +54,6 @@ class Evaluator:
                 val.add(m_tuple[i])
             
         print(self.buildMetricsTable(res))
-
-    def evaluateByDocument(self, std_path, test_path):
-        """Run evaluation on all files in the given directories. Print output by
-        document"""
-        std = loadAllStandard(std_path)
-        test = loadAllTest(test_path)
-
-        diff = set([x.name for x in std]).symmetric_difference(
-            set([y.name for y in test]))
-
-        assert(len(diff) == 0)
-
-        for i, s in enumerate(std):
-            res = self.evaluateDocument(s, test[i])
-            print('\n' + s.name)
-            print('Type    ' + Metrics.header())
-            for i, tag in enumerate(Evaluator.stat_tags):
-                print('{:8} '.format(tag.upper()) + res[i].toLine())
             
     def evaluateDocument(self, s, t):
         """Compare standard markup s with test markup t and evaluate T.

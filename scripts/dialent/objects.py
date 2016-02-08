@@ -1,4 +1,4 @@
-# Various auxilliary data objects used in dialent
+﻿# Various auxilliary data objects used in dialent
 
 ########################################################################################
 
@@ -11,7 +11,7 @@ class Token:
     
     def __init__(self, id, start, length, text):
         """Create a new token with the given parameters"""
-        self.id = int(id)
+        self.id = id
         self.start = int(start)
         self.length = int(length)
         self.end = self.start + self.length - 1
@@ -26,13 +26,37 @@ class Token:
     def __str__(self):
         return repr(self)
     
+    def isLetter(self):
+        if len(self.text) > 1:
+            return False
+        return self.text.upper() != self.text or self.text.lower() != self.text
+
+    def isPunctuation(self):
+        """Check if this token is punctuation. Only checks for a limited amount of
+        symbols because this method is only called to detect a small amount of special
+        occasions in standard markup"""
+        return not self.isLetter()
+
     def isIgnored(self):
         """Check if this token should be ignored during the comparison.
         The comparison is supposed to ignore the punctuation tokens that are(presumably)
         located directly next to their neighboors"""
         
-        return self.length == 1 and (self.prev != None and self.start - self.prev.end == 1
+        return self.length == 1 and not self.isLetter() and (
+            self.prev != None and self.start - self.prev.end == 1
                 or self.next != None and self.next.start - self.end == 1)
+
+    def isIgnoredFromLeft(self):
+        """Check if this token should be ignored during the comparison. In this case the
+        token must be directly next to its prev. neighbour"""
+        return self.length == 1 and not self.isLetter() and (
+            self.prev != None and self.start - self.prev.end == 1)
+
+    def isIgnoredFromRight(self):
+        """Check if this token should be ignored during the comparison. In this case the
+        token must be directly next to its next. neighbour"""
+        return self.length == 1 and not self.isLetter() and (
+            self.next != None and self.next.start - self.end == 1)
 
 
 #########################################################################################
@@ -42,7 +66,7 @@ class Span:
     
     def __init__(self, id, tag, start, nchars, token_start, ntokens):
         """Create a new span with the given parameters"""
-        self.id = int(id)
+        self.id = id
         self.tag = tag
         
         self.start = int(start)
@@ -70,7 +94,7 @@ class Mention:
     
     def __init__(self, id, tag, span_ids, span_dict):
         """Create a new mention of a given type with the provided spans"""
-        self.id = int(id)
+        self.id = id
         
         if not tag in Config.STANDARD_TYPES:
             raise Exception('Unknown mention tag: {}'.format(tag))
@@ -114,11 +138,14 @@ class Interval:
 class TokenSet:
     """A set of tokens corresponding to an object"""
     
-    def __init__(self, token_list, tag):
+    def __init__(self, token_list, tag, text):
+        self.id = -1
         self.tokens = set(token_list)
         self.tag = tag
         self.parents = []
+        self.interval = None
         self._span_marks = dict([(x, 0) for x in self.tokens])
+        self.text = text
         
     def __repr__(self):
         return '<' + ' '.join([repr(x) for x in self.sortedTokens()]) + '>'
@@ -152,15 +179,21 @@ class TokenSet:
     
     def toInterval(self):
         """Create an interval for the response generator"""
+        if self.interval != None:
+            return self.interval
+
         t = self.sortedTokens()
         
         # try to include quotes on the left and any punctuation on the right
+        if len(t) == 0:
+            print(self)
         start_token = t[0]
         end_token = t[len(t)-1]
-        while start_token.prev != None and start_token.prev.isIgnored():
-            start_token = start_token.prev
-        while end_token.next != None and end_token.next.isIgnored():
-            end_token = end_token.next
+        
+        while start_token.prev != None and start_token.prev.isIgnoredFromRight():
+                start_token = start_token.prev
+        while end_token.next != None and end_token.next.isIgnoredFromLeft():
+                end_token = end_token.next
         
         start = start_token.start
         end = end_token.end
@@ -193,6 +226,11 @@ class TokenSet:
 
             if self.tokens.issubset(other.tokens):
                 self.parents.append(other)
+
+    def toInlineString(self):
+        """Make an inline representation using the tokensets interval"""
+        i = self.toInterval()
+        return self.tag.upper() + ' {} "{}"'.format(i, self.text[i.start:i.end+1])
 
 #########################################################################################
 
@@ -399,12 +437,12 @@ class Entity:
     def _load_id_line(self, line, mention_dict, span_dict):
         """Load ids from the first line of the standard representation"""
         str_ids = line.strip(' \n\r\t').split(' ')
-        self.id = int(str_ids[0])
+        self.id = str_ids[0]
 
         self.is_problematic = False
         
         for _some_id in str_ids[1:]:
-            some_id = int(_some_id)
+            some_id = _some_id
             if some_id in mention_dict:
                 assert(not some_id in span_dict)
                 mention = mention_dict[some_id]
@@ -444,3 +482,345 @@ class Entity:
 
     def __str__(self):
         return self.__repr__()
+
+#########################################################################################
+
+class Argument:
+    """Fact argument"""
+
+    special_names = ['сложность', 'модальность', 'фаза']
+
+    def __init__(self, name):
+        """Initialize"""
+        self.name = name.strip(' \n\r\t').lower()
+        self.is_special = self.name in Argument.special_names
+        self.values = []
+        self.fact = None
+
+    def __repr__(self):
+        return self.name + ' : ' + ' | '.join([str(x) for x in self.values])
+
+    def __str__(self):
+        return self.__repr__()
+
+    @classmethod
+    def fromTest(cls, line):
+        parts = line.split(':')
+        assert(len(parts) == 2)
+        arg = cls(parts[0])
+        arg.values.append(StringValue(parts[1]))
+
+        return arg
+
+    def toTest(self):
+        if(len(self.values) == 0):
+            print(self.fact)
+        return self.name + ' : ' + str(self.values[0])
+
+    def toInlineString(self):
+        return str(self.values[0])
+
+    def canMatch(self, other):
+        """Check if the value of other is compatable with the arguments own values"""
+        assert(len(other.values) == 1) # other should be a test argument with only 1 value
+        for x in self.values:
+            for y in other.values:
+                if x.equals(y):
+                    return True
+
+        return False
+
+    def finalize(self):
+        """Finalize the argument for evaluation"""
+        # STUB: does nothing for now
+
+class EntityValue:
+    """Fact argument that is an entity"""
+
+    def __init__(self, full_id, descr, entity_dict):
+        """Initialize the object"""
+        assert(full_id.startswith('obj'))
+        self.entity = entity_dict[full_id[3:]]
+        self.descr = descr.strip(' \n\r\t').lower()
+        self.values = set([self.descr])
+
+    def __repr__(self):
+        return self.descr
+
+    def __str__(self):
+        return self.__repr__()
+
+    def equals(self, other):
+        assert(isinstance(other, StringValue))
+        return other.descr in self.values
+
+    def _expandPerson(self):
+        """Create all possible values for a person"""
+        per = self.entity
+        assert(per.tag == 'per')
+
+        getAttr = lambda s: [v for v in x.values for x in per.attributes if x.name == s]
+
+        firstnames = getAttr('name')
+        lastnames = getAttr('lastname')
+        patronymics = getAttr('patronymic')
+        nicknames = getAttr('nickname')
+
+        lists = [firstnames, lastnames, patronymics, nicknames]
+        combinations = ['lfp', 'fpl', 'fp', 'fl', 'lf', 'n']
+
+        values = set()
+        for c in combinations:
+            values += self._buildPerValues(lists, c)
+        values.append(self.descr)
+        self.values = set(values)
+
+        
+    def _buildPerValues(self, lists, combination):
+        value_lists = []
+        for symbol in combination:
+            if symbol == 'f':
+                value_lists.append(lists[0])
+            elif symbol == 'l':
+                value_lists.append(lists[1])
+            elif symbol == 'p':
+                value_lists.append(lists[2])
+            elif symbol == 'n':
+                value_lists.append(lists[3])
+        return self.combine(value_lists)
+        
+    def _combine(self, value_lists):
+        options = ['']
+        new_options = []
+        for lst in value_lists:
+            for val in lst:
+                if val == '':
+                    continue
+                for opt in options:
+                    new_options.append(opt + ' ' + val if opt != '' else val)
+            options = new_options
+            new_options = []
+        return options
+
+class SpanValue:
+    """Fact argument that is a span"""
+
+    def __init__(self, full_id, descr, span_dict):
+        """Initialize the object"""
+        assert(full_id.startswith('span'))
+        self.value = span_dict[full_id[4:]]
+        self.descr = descr.strip(' \n\r\t').lower()
+
+    def __repr__(self):
+        return self.descr
+
+    def __str__(self):
+        return self.__repr__()
+
+    def equals(self, other):
+        # STUB
+        return self.descr == other.descr
+
+class StringValue:
+    """String value for special cases"""
+
+    def __init__(self, value):
+        """Initialie the object"""
+        self.value = value.strip(' \n\r\t').lower()
+        self.descr = self.value
+
+    def __repr__(self):
+        return self.descr
+
+    def __str__(self):
+        return self.descr
+
+    def equals(self, other):
+        # STUB
+        return self.descr == other.descr
+
+class ArgumentBuilder:
+    """Creates an argument of a proper type from string"""
+
+    def __init__(self, entity_dict, span_dict):
+        self.entity_dict = entity_dict
+        self.span_dict = span_dict
+
+    def build(self, line):
+        parts = line.split(' ')
+        name = parts[0].lower()
+        alternatives = ' '.join(parts[1:]).split('|')
+        argument = Argument(name)
+
+        for alternative in alternatives:
+            parts = alternative.split(' ')
+            if parts[0].startswith('obj'):
+                argument.values.append(
+                    EntityValue(parts[0], ' '.join(parts[1:]), self.entity_dict))
+            elif parts[0].startswith('span'):
+                argument.values.append(
+                    SpanValue(parts[0], ' '.join(parts[1:]), self.span_dict))
+            else:
+                # just a string value
+                argument.values.append(StringValue(alternative))
+
+        return argument
+
+class Fact:
+    """Fact extracted from a document"""
+    
+    # values of the 'модальность' property that make the fact eligible for the easy mode
+    # only
+    easymode_modality_values = [
+            'возможность',
+            'будущее',
+            'отрицание'
+        ]
+
+    # values of the 'сложность' property that make the fact eligible for the hard mode
+    # only
+    hardmode_difficulty_values = [
+            'повышенная'
+        ]
+
+    def __init__(self):
+        """Initialize the object (use Fact.fromStandard/Fact.fromTest instead)"""
+        self.tag = ''
+        self.arguments = []
+        self.has_easymode_modality = False
+        self.has_hardmode_difficulty = False
+
+    def __repr__(self):
+        res = self.tag + '\n'
+        for arg in self.arguments:
+            res += str(arg) + '\n'
+
+        return res
+
+    def __str__(self):
+        return repr(self)
+
+    def toTestString(self):
+        return '\n'.join([self.tag]
+                         + [x.toTest() for x in self.arguments if not x.is_special]) + '\n'
+
+    def toInlineString(self):
+        res = '[ '
+        res += self.tag
+        for arg in self.arguments:
+            res += ' | {}'.format(arg)
+        res += ' ]'
+        return res
+
+    # static build methods
+    @classmethod
+    def fromStandard(cls, text, entity_dict, span_dict):
+        """"""
+        assert(len(text.strip('\r\n\t ')) > 0)
+        lines = text.split('\n')
+
+        builder = ArgumentBuilder(entity_dict, span_dict)
+
+        instance = cls()
+        for line in lines[1:]:
+            if len(line) == 0:
+                continue
+            arg = builder.build(line)
+            arg.fact = instance
+            instance.arguments.append(arg)
+
+        # instance.processAttributes()
+        instance._load_id_line(lines[0])
+        instance.finalize()
+
+        return instance
+
+    @classmethod
+    def fromTest(cls, text):
+        """Load the entity from a test file using a different format:
+        
+        [fact_type]
+        [arg_name]:[arg_value]
+        ...
+        [arg_name]:[arg_value]
+        """
+
+        assert(len(text.strip('\r\n\t ')) > 0)
+
+        instance = cls()
+
+        lines = text.split('\n')
+        instance.tag = lines[0].strip(' :\n\t\r').lower()
+        lines = text.split('\n')
+        for line in lines[1:]:
+            if len(line) == 0:
+                continue
+            arg = Argument.fromTest(line)
+            arg.fact = instance
+            instance.arguments.append(arg)
+
+        return instance
+
+    def _load_id_line(self, line):
+        """Loads the first line of the fact description"""
+        parts = line.split(' ')
+        self.tag = parts[1].strip(' :\n\t\r').lower()
+
+    def canMatch(self, other):
+        """Determine if this fact can match the other in evaluation. In essense, returns
+        True only if at least one of the arguments has matching values"""
+
+        if self.tag != other.tag:
+            return False
+
+        for a in self.arguments:
+            for b in other.arguments:
+                # the following condition is a stub that prevents excessive matching
+                if ((self.tag != 'occupation'
+                            or a.name != 'position'
+                                and a.name != 'where')
+                        and a.canMatch(b)):
+                    return True
+
+        return False
+
+    def finalize(self):
+        """Finalize the object for the evaluation"""
+        self._processModality()
+        self._processDifficulty()
+        for arg in self.arguments:
+            arg.finalize()
+
+    def _processModality(self):
+        modality_args = [a for a in self.arguments if a.name == 'модальность']
+        if len(modality_args) == 0:
+            self.has_easymode_modality = False
+            return
+
+        # there should be no more than one modality per fact
+        assert(len(modality_args) == 1)
+        modality = modality_args[0]
+
+        assert(len(modality.values) == 1)
+
+        assert(isinstance(modality.values[0], StringValue))
+        value = modality.values[0].descr
+        self.has_easymode_modality = value in Fact.easymode_modality_values
+
+    def _processDifficulty(self):
+        difficulty_args = [a for a in self.arguments if a.name == 'сложность']
+        if len(difficulty_args) == 0:
+            self.has_hardmode_difficulty = False
+            return
+
+        # there should be no more than one modality per fact
+        assert(len(difficulty_args) == 1)
+        difficulty = difficulty_args[0]
+
+        assert(len(difficulty.values) == 1)
+
+        assert(isinstance(difficulty.values[0], StringValue))
+        value = difficulty.values[0].descr
+        self.has_hardmode_difficulty = value in Fact.hardmode_difficulty_values
+
+        
