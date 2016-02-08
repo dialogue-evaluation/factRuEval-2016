@@ -1,14 +1,13 @@
 270-0 Occupation
-Person obj416 Шумов Василий
-Job span27652 лидер
-Company obj382 Центр | московский «Центр»
+Who obj416 Шумов Василий
+Position span27652 лидер
+Where obj382 Центр | московский «Центр»
 
 270-1 Occupation
-Person obj411 Борзыкин Михаил
-Job span27653 солист
-Company obj412 Телевизор | ленинградский « Телевизор »
+Who obj411 Борзыкин Михаил
+Position span27653 солист
+Where obj412 Телевизор | ленинградский « Телевизор »
 
 270-2 Occupation
-Person obj416 Шумов Василий
-Company obj414 университет Лос-Анджелеса
-
+Who obj416 Шумов Василий
+Where obj414 университет Лос-Анджелеса

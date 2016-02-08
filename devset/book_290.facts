@@ -1,20 +1,19 @@
 290-0 Occupation
-Person obj1224 Кан Наото
-Job span27721 Премьер-министр
-Company obj1221 Япония
+Who obj1224 Кан Наото
+Position span27721 Премьер-министр
+Where obj1221 Япония
 
 290-1 Occupation
-Person obj1229 Медведев Дмитрий
-Job span27732 президента
-Company obj1226 РФ | Россия
+Who obj1229 Медведев Дмитрий
+Position span27732 президента
+Where obj1226 РФ | Россия
 
 290-2 Occupation
-Person obj1230 Маэхара Сейдзи
-Job span27741 Министр иностранных дел
-Company obj1221 Япония
+Who obj1230 Маэхара Сейдзи
+Position span27741 Министр иностранных дел
+Where obj1221 Япония
 
 290-3 Occupation
-Person obj1237 Лавров Сергей
-Job span27758 глава
-Company obj1238 МИД РФ | внешнеполитическое ведомство России
-
+Who obj1237 Лавров Сергей
+Position span27758 глава
+Where obj1238 МИД РФ | внешнеполитическое ведомство России

@@ -1,25 +1,24 @@
 154-0 Occupation
-Person obj961 Саакашвили Михаил
-Job span26016 Президент
-Company obj962 Грузия
+Who obj961 Саакашвили Михаил
+Position span26016 Президент
+Where obj962 Грузия
 
 154-1 Occupation
-Person obj983 Суареш Хуан
-Job span26052 наблюдатель
-Company obj963 ОБСЕ | Организация по безопасности и сотрудничеству в Европе
+Who obj983 Суареш Хуан
+Position span26052 наблюдатель
+Where obj963 ОБСЕ | Организация по безопасности и сотрудничеству в Европе
 
 154-2 Occupation
-Person obj983 Суареш Хуан
-Job span26043 парламентарий
-Company obj1216 Португалия
+Who obj983 Суареш Хуан
+Position span26043 парламентарий
+Where obj1216 Португалия
 
 154-3 Occupation
-Person obj974 Брайз Мэтью
-Job span26055 Глава
-Company obj973 представительство США
+Who obj974 Брайз Мэтью
+Position span26055 Глава
+Where obj973 представительство США
 
 154-4 Occupation
-Person obj974 Брайз Мэтью
-Job span26042 помощник заместителя госсекретаря
-Company obj964 Америка | США
-
+Who obj974 Брайз Мэтью
+Position span26042 помощник заместителя госсекретаря
+Where obj964 Америка | США

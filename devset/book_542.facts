@@ -1,22 +1,21 @@
 542-0 Occupation
 Who obj1607 Громов Борис
-Job span28782 главы | span28765 Губернатору
+Position span28782 главы | span28765 Губернатору
 Where obj1605 Московская область | Подмосковье
 
 542-1 Occupation
 Who obj1607 Громов Борис
-Job span28782 главы | span28765 Губернатору
+Position span28782 главы | span28765 Губернатору
 Where obj1605 Московская область | Подмосковье
 Фаза конец
 Модальность возможность
 
 542-2 Occupation
 Who obj1609 Минченко Евгений
-Job span28781 директора
+Position span28781 директора
 Where obj1612 Международный институт политической экспертизы
 
 542-3 Occupation
 Who obj1610 Стрельченко Владимир
-Job span28790 главы
+Position span28790 главы
 Where obj1611 Химки
-

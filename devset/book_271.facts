@@ -1,10 +1,9 @@
 271-0 Occupation
-Person obj390 Медведев Дмитрий
-Job span27692 Глава
-Company obj392 РФ
+Who obj390 Медведев Дмитрий
+Position span27692 Глава
+Where obj392 РФ
 
 271-1 Occupation
-Person obj391 Путин Владимир
-Job span27693 Председатель
-Company obj393 правительство РФ
-
+Who obj391 Путин Владимир
+Position span27693 Председатель
+Where obj393 правительство РФ

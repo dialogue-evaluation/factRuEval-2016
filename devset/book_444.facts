@@ -1,5 +1,4 @@
 444-0 Occupation
-Person obj610 Путин Владимир
-Job span35252 Премьер-министр
-Company obj609 Россия
-
+Who obj610 Путин Владимир
+Position span35252 Премьер-министр
+Where obj609 Россия

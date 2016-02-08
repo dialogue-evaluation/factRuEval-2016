@@ -1,21 +1,20 @@
 349-0 Occupation
-Person obj764 Нетаньяху Биньямин
-Job span28573 глава
-Company obj766 правительство Израиля
+Who obj764 Нетаньяху Биньямин
+Position span28573 глава
+Where obj766 правительство Израиля
 
 349-1 Occupation
-Person obj795 Эрекат Саеб
-Job span28601 Глава
-Company obj797 палестинская делегация
+Who obj795 Эрекат Саеб
+Position span28601 Глава
+Where obj797 палестинская делегация
 
 349-2 Occupation
-Person obj764 Нетаньяху Биньямин
-Job span28577 премьер
-Company obj768 Израиль
+Who obj764 Нетаньяху Биньямин
+Position span28577 премьер
+Where obj768 Израиль
 Сложность повышенная
 
 349-3 Deal
-Company obj766 правительство Израиля
-Company obj769 Иерусалим
+Participant obj766 правительство Израиля
+Participant obj769 Иерусалим
 Type инвестиция
-

@@ -1,5 +1,4 @@
 348-0 Occupation
-Person obj760 Саакашвили Михаил
-Job span28149 президента
-Company obj761 Грузия
-
+Who obj760 Саакашвили Михаил
+Position span28149 президента
+Where obj761 Грузия

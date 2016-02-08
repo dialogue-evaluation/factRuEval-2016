@@ -7,9 +7,9 @@ Company obj287 администрация Екатеринбурга
 Company obj286 Екатеринбург
 
 247-4 Occupation
-Person obj291 Щеголёв Игорь
-Job span27431 главы
-Company obj290 Минкомсвязи
+Who obj291 Щеголёв Игорь
+Position span27431 главы
+Where obj290 Минкомсвязи
 
 247-5 Deal
 Participant obj285 администрация Кремля
@@ -20,4 +20,3 @@ Type купля/продажа
 Participant obj287 администрация Екатеринбурга
 Participant obj288 RU-CENTER
 Type купля/продажа
-

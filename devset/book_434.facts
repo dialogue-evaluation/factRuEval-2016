@@ -1,12 +1,12 @@
 434-0 Deal
-Company obj594 WFC | World Fashion Channel
-Company obj595 Алтек
+Participant obj594 WFC | World Fashion Channel
+Participant obj595 Алтек
 Type займ/возвращение займа
 
 434-1 Occupation
-Person obj598 Перепёлкин Артур
-Job span34079 бывший глава
-Company obj597 Русская винно-водочная компания
+Who obj598 Перепёлкин Артур
+Position span34079 бывший глава
+Where obj597 Русская винно-водочная компания
 
 434-2 Ownership
 Person obj598 Перепёлкин Артур
@@ -16,4 +16,3 @@ Company obj594 WFC | World Fashion Channel
 Participant obj598 Перепёлкин Артур
 Participant obj594 WFC | World Fashion Channel
 Type займ/возвращение займа
-

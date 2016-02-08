@@ -1,6 +1,6 @@
 413-0 Occupation
 Who obj1341 Илюмжинов Кирсан
-Job span29329 Президент
+Position span29329 Президент
 Where obj1339 ФИДЕ
 
 413-1 Deal
@@ -20,4 +20,3 @@ Participant obj1339 ФИДЕ
 Participant obj1345 Мехико
 Participant obj1341 Илюмжинов Кирсан
 Type услуги
-

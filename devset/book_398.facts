@@ -1,39 +1,39 @@
 398-0 Occupation
 Who obj1448 Клинсман Юрген
-Job span29180 бундестренер
+Position span29180 бундестренер
 Where obj1462 сборная команды
 
 398-1 Occupation
 Who obj1449 Леман Йенс
-Job span29182 первый вратарь
+Position span29182 первый вратарь
 Where obj1462 сборная команды
 Фаза начало
 
 398-2 Occupation
 Who obj1461 Кан Оливер
-Job span29182 первый вратарь
+Position span29182 первый вратарь
 Where obj1462 сборная команды
 Фаза конец
 
 398-3 Occupation
 Who obj1461 Кан Оливер
-Job span29183 запасным вратарём
+Position span29183 запасным вратарём
 Where obj1462 сборная команды
 Фаза начало
 
 398-4 Occupation
 Who obj1453 Лёв Йоахим
-Job span29196 второй тренер
+Position span29196 второй тренер
 Where obj1462 сборная команды
 
 398-5 Occupation
 Who obj1454 Кёпке Андреас
-Job span29197 тренер вратарей
+Position span29197 тренер вратарей
 Where obj1462 сборная команды
 
 398-6 Occupation
 Who obj1461 Кан Оливер
-Job span29199 вратарь
+Position span29199 вратарь
 Where obj1464 Бавария | мюнхенская Бавария
 Сложность повышенная
 
@@ -45,13 +45,12 @@ Where obj1462 сборная команды
 
 398-8 Occupation
 Who obj1461 Кан Оливер
-Job span29220 капитаном
+Position span29220 капитаном
 Where obj1462 сборная команды
 Фаза конец
 
 398-9 Occupation
 Who obj1459 Баллак Михаель
-Job span29220 капитаном
+Position span29220 капитаном
 Where obj1462 сборная команды
 Фаза начало
-

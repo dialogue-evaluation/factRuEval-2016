@@ -1,10 +1,9 @@
 188-0 Occupation
-Person obj237 Кудрин Алексей
-Job span26193 Министр финансов
-Company obj238 РФ
+Who obj237 Кудрин Алексей
+Position span26193 Министр финансов
+Where obj238 РФ
 
 188-1 Occupation
-Person obj239 Путин Владимир
-Job span26201 премьер-министр
-Company obj238 РФ
-
+Who obj239 Путин Владимир
+Position span26201 премьер-министр
+Where obj238 РФ

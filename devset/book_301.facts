@@ -1,31 +1,30 @@
 301-0 Occupation
-Person obj498 Нетаньяху Беньямин
-Job span27826 Премьер-министр | span27844 премьер
+Who obj498 Нетаньяху Беньямин
+Position span27826 Премьер-министр | span27844 премьер
 Сложность повышенная
 Where obj500 Израиль
 
 301-1 Occupation
-Person obj515 Меридор Дан
-Job span27846 глава
-Company obj509 государственная комиссия по атомной энергии | комиссия по атомной энергии
+Who obj515 Меридор Дан
+Position span27846 глава
+Where obj509 государственная комиссия по атомной энергии | комиссия по атомной энергии
 
 301-2 Occupation
-Person obj515 Меридор Дан
-Job span27851 министр по делам разведки
-Company obj500 Израиль
+Who obj515 Меридор Дан
+Position span27851 министр по делам разведки
+Where obj500 Израиль
 
 301-3 Occupation
-Person obj498 Нетаньяху Беньямин
-Job span27849 глава
-Company obj516 израильское правительство | правительство Израиля
+Who obj498 Нетаньяху Беньямин
+Position span27849 глава
+Where obj516 израильское правительство | правительство Израиля
 
 301-4 Occupation
-Person obj513 Ху Цзиньтао
-Job span27861 председатель
-Company obj512 КНР
+Who obj513 Ху Цзиньтао
+Position span27861 председатель
+Where obj512 КНР
 
 301-5 Occupation
-Person obj514 Браун Гордон
-Job span27862 премьер
+Who obj514 Браун Гордон
+Position span27862 премьер
 Фаза obj636 Британия
-

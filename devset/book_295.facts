@@ -1,5 +1,4 @@
 295-0 Occupation
-Person obj469 Берлускони Сильвио
-Job span27806 премьер-министра
-Company obj517 Апеннины | Италия
-
+Who obj469 Берлускони Сильвио
+Position span27806 премьер-министра
+Where obj517 Апеннины | Италия

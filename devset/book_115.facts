@@ -1,12 +1,12 @@
 115-1 Occupation
-Person obj98 Ху Цзиньтао
-Job span22863 председателя
-Company obj93 Китай
+Who obj98 Ху Цзиньтао
+Position span22863 председателя
+Where obj93 Китай
 
 115-2 Occupation
-Person obj94 Чэнь Дэмин
-Job span22872 министр торговли
-Company obj93 Китай
+Who obj94 Чэнь Дэмин
+Position span22872 министр торговли
+Where obj93 Китай
 
 115-3 Deal
 Participant obj90 Industrial and Commercial Bank of China | Промышленный и коммерческий банк Китая
@@ -16,4 +16,3 @@ Type купля/продажа
 115-4 Ownership
 Owner obj100 правительство Китая
 Property obj90 Industrial and Commercial Bank of China | Промышленный и коммерческий банк Китая
-

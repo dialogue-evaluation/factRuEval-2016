@@ -1,31 +1,30 @@
 147-0 Occupation
-Person obj646 Белов Александр
-Job span25727 лидер
-Company obj645 ДПНИ | Движение против нелегальной иммиграции
+Who obj646 Белов Александр
+Position span25727 лидер
+Where obj645 ДПНИ | Движение против нелегальной иммиграции
 
 147-1 Occupation
-Person obj648 Митрохин Сергей
-Job span25742 главу
-Company obj647 Яблоко
+Who obj648 Митрохин Сергей
+Position span25742 главу
+Where obj647 Яблоко
 Сложность повышенная
 
 147-2 Occupation
-Person obj649 Гороховский Артур
-Job span25756 советник руководителя
-Company obj647 Яблоко
+Who obj649 Гороховский Артур
+Position span25756 советник руководителя
+Where obj647 Яблоко
 
 147-3 Occupation
-Person obj651 Брод Александр
-Job span25770 члена
-Company obj660 Общественная палата
+Who obj651 Брод Александр
+Position span25770 члена
+Where obj660 Общественная палата
 
 147-4 Occupation
-Person obj651 Брод Александр
-Job span25770 члена
-Company obj659 российско-американская рабочая группа по гражданскому обществу
+Who obj651 Брод Александр
+Position span25770 члена
+Where obj659 российско-американская рабочая группа по гражданскому обществу
 
 147-5 Occupation
-Person obj652 Чаплин Всеволод
-Job span25802 глава
-Company obj657 синодальный Отдел по взаимоотношениям Церкви и общества
-
+Who obj652 Чаплин Всеволод
+Position span25802 глава
+Where obj657 синодальный Отдел по взаимоотношениям Церкви и общества
