@@ -3,8 +3,8 @@ Who obj344 Хелмбрехт Крис
 Position span27556 директор
 
 259-1 Ownership
-Person obj344 Хелмбрехт Крис
-Company obj343 креативное агентство Kollektiv
+Owner obj344 Хелмбрехт Крис
+Property obj343 креативное агентство Kollektiv
 
 259-2 Occupation
 Who obj341 Угбома Ннека
@@ -17,12 +17,12 @@ Position span27565 лидер
 Where obj337 субкультурная партия Dog with two tails
 
 259-4 Ownership
-Person obj335 Жено Георг
-Company obj334 экспериментальный театр Театр.doc
+Owner obj335 Жено Георг
+Property obj334 экспериментальный театр Театр.doc
 
 259-5 Ownership
-Person obj335 Жено Георг
-Company obj333 театр им . Йозефа Бойса
+Owner obj335 Жено Георг
+Property obj333 театр им . Йозефа Бойса
 
 259-7 Occupation
 Who obj330 Яковлева Светлана

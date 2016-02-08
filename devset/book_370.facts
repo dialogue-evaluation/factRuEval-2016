@@ -1,6 +1,6 @@
 370-0 Ownership
-Person obj901 Цукерберг Марк
-Company obj897 Facebook
+Owner obj901 Цукерберг Марк
+Property obj897 Facebook
 
 370-1 Occupation
 Who obj902 Гринспен Аарон

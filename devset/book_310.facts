@@ -1,6 +1,6 @@
 310-0 Ownership
-Person obj664 Видениус Майкл
-Company obj666 MySQL
+Owner obj664 Видениус Майкл
+Property obj666 MySQL
 
 310-1 Deal
 Participant obj662 Oracle
