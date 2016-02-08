@@ -1,15 +1,14 @@
 462-0 Occupation
-Person obj607 Каллен Майкл
-Job span28507 министр финансов
-Company obj603 Новая Зеландия
+Who obj607 Каллен Майкл
+Position span28507 министр финансов
+Where obj603 Новая Зеландия
 
 462-1 Occupation
-Person obj604 Данн Питер
-Job span28519 Министр по государственным сборам
-Company obj603 Новая Зеландия
+Who obj604 Данн Питер
+Position span28519 Министр по государственным сборам
+Where obj603 Новая Зеландия
 
 462-2 Occupation
-Person obj606 О’Рейли Фил
-Job span28520 глава
-Company obj605 Business NZ
-
+Who obj606 О’Рейли Фил
+Position span28520 глава
+Where obj605 Business NZ

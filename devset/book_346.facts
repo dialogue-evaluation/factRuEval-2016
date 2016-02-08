@@ -1,16 +1,15 @@
 346-0 Occupation
-Person obj728 Керри Джон
-Job span34801 Председатель
-Company obj737 комитет по иностранным делам
+Who obj728 Керри Джон
+Position span34801 Председатель
+Where obj737 комитет по иностранным делам
 
 346-1 Occupation
-Person obj728 Керри Джон
-Job span34800 Сенатор
-Company obj732 Америка | США
+Who obj728 Керри Джон
+Position span34800 Сенатор
+Where obj732 Америка | США
 Сложность повышенная
 
 346-2 Occupation
-Person obj736 Усама бин Ладен
-Job span34802 лидера
-Company obj733 Аль-Кайда
-
+Who obj736 Усама бин Ладен
+Position span34802 лидера
+Where obj733 Аль-Кайда

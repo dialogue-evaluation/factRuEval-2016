@@ -1,14 +1,13 @@
 124-0 Occupation
-Person obj118 Гиффордс Гэбриэль
-Job span22925 член
-Company obj121 Палаты представителей Конгресса США
+Who obj118 Гиффордс Гэбриэль
+Position span22925 член
+Where obj121 Палаты представителей Конгресса США
 
 124-1 isPartOf
 Company obj121 Палаты представителей Конгресса США
 Company obj115 Конгресса США
 
 124-2 Occupation
-Person obj122 Обама Барак
-Job span22937 президент
-Company obj116 США
-
+Who obj122 Обама Барак
+Position span22937 президент
+Where obj116 США

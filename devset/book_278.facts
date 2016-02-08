@@ -1,5 +1,4 @@
 278-0 Occupation
-Person obj396 Зорькин Валерий
-Job span33857 председатель
-Company obj399 Конституционный суд
-
+Who obj396 Зорькин Валерий
+Position span33857 председатель
+Where obj399 Конституционный суд

@@ -1,5 +1,4 @@
 361-0 Occupation
-Person obj563 Гордон Фил
-Job span28180 Помощник госсекретаря
-Company obj562 США
-
+Who obj563 Гордон Фил
+Position span28180 Помощник госсекретаря
+Where obj562 США

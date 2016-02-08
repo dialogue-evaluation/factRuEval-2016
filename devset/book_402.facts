@@ -1,5 +1,4 @@
 402-0 Occupation
-Person obj926 Лукашенко Александр
-Job span28245 президенту
-Company obj927 Белоруссия
-
+Who obj926 Лукашенко Александр
+Position span28245 президенту
+Where obj927 Белоруссия

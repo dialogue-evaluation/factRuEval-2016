@@ -1,15 +1,14 @@
 438-1 Occupation
-Person obj1205 Герстенмайер Билл
-Job span35153 директор НАСА по космическим полётам
-Company obj1204 НАСА
+Who obj1205 Герстенмайер Билл
+Position span35153 директор НАСА по космическим полётам
+Where obj1204 НАСА
 
 438-2 Occupation
-Person obj1210 Воробьёв Александр
-Job span35173 Представитель
-Company obj1203 Роскосмос
+Who obj1210 Воробьёв Александр
+Position span35173 Представитель
+Where obj1203 Роскосмос
 
 438-3 Occupation
-Person obj1212 Перминов Анатолий
-Job span35174 Глава
-Company obj1203 Роскосмос
-
+Who obj1212 Перминов Анатолий
+Position span35174 Глава
+Where obj1203 Роскосмос

@@ -1,5 +1,4 @@
 461-0 Occupation
-Person obj1152 Севастьянов Николай
-Job span35397 руководитель
-Company obj1151 Энергия
-
+Who obj1152 Севастьянов Николай
+Position span35397 руководитель
+Where obj1151 Энергия

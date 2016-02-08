@@ -1,5 +1,4 @@
 145-0 Occupation
-Person obj182 Эдуард
-Job span25035 президентов
-Company obj183 Michelin
-
+Who obj182 Эдуард
+Position span25035 президентов
+Where obj183 Michelin

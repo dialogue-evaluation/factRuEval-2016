@@ -1,6 +1,5 @@
 503-0 Occupation
-Person obj1065 Москва
-Job span35619 мэр
-Company obj1069 Лужков
+Who obj1065 Москва
+Position span35619 мэр
+Where obj1069 Лужков
 Сложность повышенная
-

@@ -1,5 +1,4 @@
 256-0 Occupation
-Person obj313 Медведев Дмитрий
-Job span27482 президента | span27490 главы
-Company obj311 РФ
-
+Who obj313 Медведев Дмитрий
+Position span27482 президента | span27490 главы
+Where obj311 РФ

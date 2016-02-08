@@ -1,6 +1,6 @@
 297-4 Ownership
-Person obj494 Цукерберг Марк
-Company obj486 Facebook
+Owner obj494 Цукерберг Марк
+Property obj486 Facebook
 
 297-5 Deal
 Participant obj487 DST | Digital Sky Technologies
@@ -32,4 +32,3 @@ Property obj486 Facebook
 Participant obj490 Elevation Partners
 Participant obj486 Facebook
 Type купля/продажа
-

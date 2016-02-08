@@ -1,60 +1,58 @@
 259-0 Occupation
-Person obj344 Хелмбрехт Крис
-Job span27556 директор
+Who obj344 Хелмбрехт Крис
+Position span27556 директор
 
 259-1 Ownership
-Person obj344 Хелмбрехт Крис
-Company obj343 креативное агентство Kollektiv
+Owner obj344 Хелмбрехт Крис
+Property obj343 креативное агентство Kollektiv
 
 259-2 Occupation
-Person obj341 Угбома Ннека
-Job span27558 руководитель
-Company obj340  проект Mushroom works
+Who obj341 Угбома Ннека
+Position span27558 руководитель
+Where obj340  проект Mushroom works
 
 259-3 Occupation
-Person obj338 Ковач Гергей
-Job span27565 лидер
-Company obj337 субкультурная партия Dog with two tails
+Who obj338 Ковач Гергей
+Position span27565 лидер
+Where obj337 субкультурная партия Dog with two tails
 
 259-4 Ownership
-Person obj335 Жено Георг
-Company obj334 экспериментальный театр Театр.doc
+Owner obj335 Жено Георг
+Property obj334 экспериментальный театр Театр.doc
 
 259-5 Ownership
-Person obj335 Жено Георг
-Company obj333 театр им . Йозефа Бойса
+Owner obj335 Жено Георг
+Property obj333 театр им . Йозефа Бойса
 
 259-7 Occupation
-Person obj330 Яковлева Светлана
-Job span27559 директор
-Company obj321 Global Cultural Project
+Who obj330 Яковлева Светлана
+Position span27559 директор
+Where obj321 Global Cultural Project
 
 259-8 Occupation
-Person obj329 Разлогов Кирилл
-Job span27561 директор
-Company obj328 Российский институт культурологи
+Who obj329 Разлогов Кирилл
+Position span27561 директор
+Where obj328 Российский институт культурологи
 
 259-9 Occupation
-Person obj327 Тишков Валерий
-Job span27562 директор
-Company obj326 Институт этнологии и антропологии РАН
+Who obj327 Тишков Валерий
+Position span27562 директор
+Where obj326 Институт этнологии и антропологии РАН
 
 259-9 Occupation
-Person obj327 Тишков Валерий
-Job span27562 директор
-Company obj326 Институт этнологии и антропологии РАН
+Who obj327 Тишков Валерий
+Position span27562 директор
+Where obj326 Институт этнологии и антропологии РАН
 
 259-10 isPartOf
 Company obj326 Институт этнологии и антропологии РАН
 Company obj325 РАН
 
 259-11 Occupation
-Person obj324 Майклсон Виктор
-Job span27560 зав .
-Company obj323 кафедра социальных коммуникаций и технологий РГГУ
+Who obj324 Майклсон Виктор
+Position span27560 зав .
+Where obj323 кафедра социальных коммуникаций и технологий РГГУ
 
 259-12 isPartOf
 Company obj323 кафедра социальных коммуникаций и технологий РГГУ
 Company obj322 РГГУ
-
-

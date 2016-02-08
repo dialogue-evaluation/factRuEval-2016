@@ -1,25 +1,24 @@
 151-0 Occupation
-Person obj992 Саймон Джоэл
-Job span25882 руководитель
-Company obj987 КЗЖ | комитет защиты журналистов
+Who obj992 Саймон Джоэл
+Position span25882 руководитель
+Where obj987 КЗЖ | комитет защиты журналистов
 
 151-1 Occupation
-Person obj1004 Хассеин Билал
-Job span25911 фотограф
-Company obj1003 Ассошиэйтед Пресс
+Who obj1004 Хассеин Билал
+Position span25911 фотограф
+Where obj1003 Ассошиэйтед Пресс
 
 151-2 Occupation
-Person obj1006 аль-Хадж Сами
-Job span25912 оператор
-Company obj1005 Аль-Джазира
+Who obj1006 аль-Хадж Сами
+Position span25912 оператор
+Where obj1005 Аль-Джазира
 
 151-3 Occupation
-Person obj998 Стомахин Борис
-Job span25969 редактор
-Company obj997 Радикальная политика
+Who obj998 Стомахин Борис
+Position span25969 редактор
+Where obj997 Радикальная политика
 
 151-4 Occupation
-Person obj996 Королёв Владимир
-Job span25977 фотограф
-Company obj995 Пермский обозреватель
-
+Who obj996 Королёв Владимир
+Position span25977 фотограф
+Where obj995 Пермский обозреватель

@@ -1,5 +1,4 @@
 98-0 Occupation
-Person obj8 Ансип Андрус
-Job span22731 премьер-министр
-Company obj7 Эстония
-
+Who obj8 Ансип Андрус
+Position span22731 премьер-министр
+Where obj7 Эстония
