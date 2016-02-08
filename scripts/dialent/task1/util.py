@@ -239,7 +239,11 @@ class Evaluator:
         if is_locorg_allowed:
             allowed_tags.append('locorg')
 
-        return dict([(x, self.doCompareTag(s[x], t[x])) for x in allowed_tags])
+        res = dict()
+        for tag in allowed_tags:
+            s_sub = [x for x in s if x.tag == tag]
+            res[tag] = self.doCompareTag(s_sub, t[tag])
+        return res
 
     def doCompareTag(self, std, test):
         """
