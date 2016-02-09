@@ -168,6 +168,7 @@ class Standard:
                 except Exception as e:
                     raise Exception('Invalid mention or span id: line {} of file {}:\n{}'.format(
                         index, filename, e))
+
                 self.mentions.append(
                     Mention(mention_id, line[1], span_indices, self._span_dict))
                 
@@ -251,7 +252,8 @@ class Standard:
             key = mention.tag
             if key == 'locorg' and not is_locorg_allowed:
                 key = 'loc'
-            assert(key in allowed_tags)
+            if not (key in allowed_tags):
+                continue
             ts = TokenSet(
                     [x for span in mention.spans for x in span.tokens],
                     key, self.text)

@@ -14,7 +14,8 @@ class Config:
         'Organization' : 'org',
         'Org' : 'org',
         'LocOrg' : 'locorg',
-        'Location' : 'loc'
+        'Location' : 'loc',
+        'Project' : 'project'
     }
     
 #########################################################################################
