@@ -490,8 +490,13 @@ class Argument:
 
     special_names = ['сложность', 'модальность', 'фаза']
 
+    position_dict = None
+
     def __init__(self, name):
         """Initialize"""
+        if Argument.position_dict == None:
+            Argument.loadPositionDict()
+
         self.name = name.strip(' \n\r\t').lower()
         self.is_special = self.name in Argument.special_names
         self.values = []
@@ -502,6 +507,15 @@ class Argument:
 
     def __str__(self):
         return self.__repr__()
+
+    @classmethod
+    def loadPositionDict(cls):
+        cls.position_dict = {}
+        with open('dialent/jobs_processed.txt', encoding='utf-8') as f:
+            for line in f:
+                parts = [x.strip(' \n\r\t') for x in line.split('|')]
+                assert(len(parts) == 2)
+                cls.position_dict[parts[0]] = parts[1]
 
     @classmethod
     def fromTest(cls, line):
@@ -532,7 +546,8 @@ class Argument:
 
     def finalize(self):
         """Finalize the argument for evaluation"""
-        # STUB: does nothing for now
+        for v in self.values:
+            v.finalize()
 
 class EntityValue:
     """Fact argument that is an entity"""
@@ -544,6 +559,9 @@ class EntityValue:
         self.descr = descr.strip(' \n\r\t').lower()
         self.values = set([self.descr])
 
+        if self.entity.tag == 'per':
+            self._expandPerson()
+
     def __repr__(self):
         return self.descr
 
@@ -554,28 +572,31 @@ class EntityValue:
         assert(isinstance(other, StringValue))
         return other.descr in self.values
 
+    def finalize(self):
+        """Finalize the value"""
+        # does nothing for now
+
     def _expandPerson(self):
         """Create all possible values for a person"""
         per = self.entity
         assert(per.tag == 'per')
 
-        getAttr = lambda s: [v for v in x.values for x in per.attributes if x.name == s]
+        getAttr = lambda s: [v for x in per.attributes for v in x.values if x.name == s]
 
-        firstnames = getAttr('name')
+        firstnames = getAttr('firstname')
         lastnames = getAttr('lastname')
         patronymics = getAttr('patronymic')
         nicknames = getAttr('nickname')
 
         lists = [firstnames, lastnames, patronymics, nicknames]
-        combinations = ['lfp', 'fpl', 'fp', 'fl', 'lf', 'n']
+        combinations = ['lfp', 'fpl', 'fp', 'fl', 'lf', 'n', 'f', 'p', 'l', 'fn']
 
-        values = set()
+        values = []
         for c in combinations:
             values += self._buildPerValues(lists, c)
         values.append(self.descr)
         self.values = set(values)
 
-        
     def _buildPerValues(self, lists, combination):
         value_lists = []
         for symbol in combination:
@@ -587,7 +608,7 @@ class EntityValue:
                 value_lists.append(lists[2])
             elif symbol == 'n':
                 value_lists.append(lists[3])
-        return self.combine(value_lists)
+        return self._combine(value_lists)
         
     def _combine(self, value_lists):
         options = ['']
@@ -605,11 +626,13 @@ class EntityValue:
 class SpanValue:
     """Fact argument that is a span"""
 
-    def __init__(self, full_id, descr, span_dict):
+    def __init__(self, owner, full_id, descr, span_dict):
         """Initialize the object"""
         assert(full_id.startswith('span'))
-        self.value = span_dict[full_id[4:]]
+        self.owner = owner
+        self.span = span_dict[full_id[4:]]
         self.descr = descr.strip(' \n\r\t').lower()
+        self.values = [self.descr]
 
     def __repr__(self):
         return self.descr
@@ -618,8 +641,14 @@ class SpanValue:
         return self.__repr__()
 
     def equals(self, other):
-        # STUB
-        return self.descr == other.descr
+        return other.value in self.values
+
+    def finalize(self):
+        """Finalize the value"""
+        if self.owner.name == 'position':
+            if(self.values[0] in Argument.position_dict):
+                self.values.append(Argument.position_dict[self.values[0]])
+
 
 class StringValue:
     """String value for special cases"""
@@ -638,6 +667,10 @@ class StringValue:
     def equals(self, other):
         # STUB
         return self.descr == other.descr
+
+    def finalize(self):
+        """Finalize the value"""
+        # does nothing for now
 
 class ArgumentBuilder:
     """Creates an argument of a proper type from string"""
@@ -659,7 +692,7 @@ class ArgumentBuilder:
                     EntityValue(parts[0], ' '.join(parts[1:]), self.entity_dict))
             elif parts[0].startswith('span'):
                 argument.values.append(
-                    SpanValue(parts[0], ' '.join(parts[1:]), self.span_dict))
+                    SpanValue(argument, parts[0], ' '.join(parts[1:]), self.span_dict))
             else:
                 # just a string value
                 argument.values.append(StringValue(alternative))
@@ -689,6 +722,7 @@ class Fact:
         self.arguments = []
         self.has_easymode_modality = False
         self.has_hardmode_difficulty = False
+        self.is_ignored = False
 
     def __repr__(self):
         res = self.tag + '\n'
@@ -706,6 +740,10 @@ class Fact:
 
     def toInlineString(self):
         res = '[ '
+        if self.has_easymode_modality:
+            res += '(MODALITY) '
+        if self.has_hardmode_difficulty:
+            res += '(HARD) '
         res += self.tag
         for arg in self.arguments:
             res += ' | {}'.format(arg)
@@ -784,6 +822,16 @@ class Fact:
 
         return False
 
+    def removePhase(self):
+        """Remove phase argument, it one is present"""
+        phase_args = [a for a in self.arguments if a.name == 'фаза']
+        if len(phase_args) == 0:
+            return
+
+        # there should be no more than one phase per fact
+        assert(len(phase_args) == 1)
+        self.arguments.remove(phase_args[0])
+
     def finalize(self):
         """Finalize the object for the evaluation"""
         self._processModality()
@@ -800,6 +848,7 @@ class Fact:
         # there should be no more than one modality per fact
         assert(len(modality_args) == 1)
         modality = modality_args[0]
+        self.arguments.remove(modality)
 
         assert(len(modality.values) == 1)
 
@@ -816,6 +865,7 @@ class Fact:
         # there should be no more than one modality per fact
         assert(len(difficulty_args) == 1)
         difficulty = difficulty_args[0]
+        self.arguments.remove(difficulty)
 
         assert(len(difficulty.values) == 1)
 

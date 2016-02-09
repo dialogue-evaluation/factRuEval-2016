@@ -1,6 +1,8 @@
 
 import os
 
+from dialent.config import Tables
+
 from dialent.standard import Standard
 from dialent.task3.test import Test
 
@@ -44,7 +46,6 @@ class Evaluator:
     def evaluateDocument(self, std, test):
         self.optimizer = Optimizer(std, test, self.hard_mode)
         self.optimizer.findSolution()
-        m = self.optimizer.metrics
         
         return self.optimizer.metrics
 
@@ -61,9 +62,19 @@ class Optimizer:
     """Optimizes the matching"""
 
     def __init__(self, std, test, hard_mode):
-        self.std = std.facts
         self.test = test.facts
         self.hard_mode = hard_mode
+
+        if hard_mode:
+            # hard mode, remove all facts with modality other than 'actual'
+            self.std = [x for x in std.facts if not x.has_easymode_modality]
+        else:
+            # easy mode, ignore all facts marked as difficult, and remove phase argument
+            self.std = std.facts
+            for fact in self.std:
+                if fact.has_hardmode_difficulty:
+                    fact.is_ignored = True
+                fact.removePhase()
 
         self.findPossibleMatches()
 
@@ -133,7 +144,17 @@ class Optimizer:
         tp_std = sum(q_std.values())
         tp_test = sum(q_test.values())
 
-        return Metrics.create(tp_std, tp_test, len(self.std), len(self.test))
+        n_std = 0
+        n_test = 0
+        for cluster in clusters:
+            if cluster.std == None:
+                n_test += 1
+                continue
+            if not cluster.std.is_ignored:
+                n_std += 1
+                n_test += len(cluster.test)
+
+        return Metrics.create(tp_std, tp_test, n_std, n_test)
 
     def describeMatching(self):
         """Returns a string description of the matching this optimizer built"""
@@ -167,7 +188,7 @@ class Cluster:
     def calculateQuality(self):
         """Calculate quality"""
 
-        if self.std == None or len(self.test) == 0:
+        if self.std == None or len(self.test) == 0 or self.std.is_ignored:
             self.arg_quality = 0
             self.id_quality = 0
             self.quality = 0
@@ -206,13 +227,17 @@ class Cluster:
             if found_match:
                 continue
 
-        n = len(matched_s_args)
-        self.arg_quality = n / float(n + len(unmatched_s_args) + len(unmatched_t_args))
+        n = sum(Tables.getArgumentWeight(x.name) for x in matched_s_args)
+        fp = sum(Tables.getArgumentWeight(x.name) for x in unmatched_t_args)
+        fn = sum(Tables.getArgumentWeight(x.name) for x in unmatched_s_args)
+        self.arg_quality = n / float(n + fp + fn)
+        if(self.arg_quality > 1):
+            print(self)
         
-        denominator = float(n) * (n - 1) / 2.0
+        denominator = len(matched_s_args) * (len(matched_s_args) - 1) / 2.0
         edges = set()
-        for i in range(n):
-            for j in range(i+1, n):
+        for i in range(len(matched_s_args)):
+            for j in range(i+1, len(matched_s_args)):
                 x = self.std.arguments[i]
                 y = self.std.arguments[j]
 
@@ -229,7 +254,10 @@ class Cluster:
 
     def toInlineString(self):
         """Create an inline description of a cluster"""
-        res = '{:.2f}\t{:.2f}\t{:.2f}\t'.format(self.quality, self.arg_quality, self.id_quality)
+        if self.std != None and self.std.is_ignored:
+            res = '\tIGNORED\t\t'
+        else:
+            res = '{:.2f}\t{:.2f}\t{:.2f}\t'.format(self.quality, self.arg_quality, self.id_quality)
         res += self.std.toInlineString() if self.std != None else '[---unmatched---]'
         res += '\t=\t'
         if len(self.test) == 0:

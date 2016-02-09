@@ -1,4 +1,4 @@
-# This module contains various settings and global parameters
+﻿# This module contains various settings and global parameters
 
 #########################################################################################
 
@@ -31,6 +31,18 @@ class Tables:
         else:
             return dfl_value
 
+    def getArgumentWeight(tag):
+        """Lookup the given argument weight"""
+
+        if tag in Tables.ARG_WEIGHTS:
+            return Tables.ARG_WEIGHTS[tag]
+        else:
+            return 1.0
+
+    ARG_WEIGHTS = {
+        'position' : 0.5,
+        'фаза' : 0.5
+        }
 
     # this table specifies weights of various spans in mention evaluation
     QUALITY = {
