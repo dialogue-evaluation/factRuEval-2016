@@ -2,9 +2,18 @@
 
 ########################################################################################
 
+import os
+
 from dialent.config import Config
 
 #########################################################################################
+
+
+jobs_file_path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    'jobs_processed.txt'
+    )
+
 
 class Token:
     """Raw token"""
@@ -511,7 +520,7 @@ class Argument:
     @classmethod
     def loadPositionDict(cls):
         cls.position_dict = {}
-        with open('dialent/jobs_processed.txt', encoding='utf-8') as f:
+        with open(jobs_file_path, encoding='utf-8') as f:
             for line in f:
                 parts = [x.strip(' \n\r\t') for x in line.split('|')]
                 assert(len(parts) == 2)
