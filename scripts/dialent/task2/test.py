@@ -5,6 +5,7 @@
 import os
 import csv
 
+from dialent.common.util import safeOpen
 from dialent.config import Config
 
 from dialent.objects import Entity
@@ -34,7 +35,7 @@ class Test:
         """Do the exception-prone loading"""
         self.entities = []
 
-        with open(filename, 'r', encoding='utf-8') as f:
+        with safeOpen(filename) as f:
             buffer = ''
             for raw_line in f:
                 line = raw_line.strip(' \t\n\r')
