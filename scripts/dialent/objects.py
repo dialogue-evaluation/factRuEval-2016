@@ -394,7 +394,7 @@ class Entity:
             if len(line) == 0:
                 continue
             instance.attributes.append(Attribute.fromTest(line))
-        instance.tag = lines[0].lower()
+        instance.tag = lines[0].lower().strip(' :\r\n\t')
         if instance.tag == 'locorg':
             # all locorgs are considered locs for this task
             instance.tag = 'loc'

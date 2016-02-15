@@ -47,7 +47,7 @@ class ResponseGenerator:
 
         names = list(unique_names)
         for name in names:
-            std = Standard(name)
+            std = Standard(name, std_dir)
             self.generateDoc(std, os.path.join(out_dir, name + '.task1'))
 
     
@@ -67,7 +67,7 @@ class ResponseGenerator:
             
         res = ''
         for tag in allowed_tags:
-            res += self._doBuildResponse(tag, s[tag])
+            res += self._doBuildResponse(tag, [x for x in s if x.tag == tag])
         
         os.makedirs(os.path.dirname(out_filename), exist_ok=True)
         with open(out_filename, 'w') as f:
@@ -239,11 +239,7 @@ class Evaluator:
         if is_locorg_allowed:
             allowed_tags.append('locorg')
 
-        res = dict()
-        for tag in allowed_tags:
-            s_sub = [x for x in s if x.tag == tag]
-            res[tag] = self.doCompareTag(s_sub, t[tag])
-        return res
+        return dict([(x, self.doCompareTag(s[x], t[x])) for x in allowed_tags])
 
     def doCompareTag(self, std, test):
         """
@@ -454,3 +450,25 @@ def calcMetrics(tp, n_std, n_test):
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
     return (precision, recall, f1, tp, n_std, n_test)
+
+#########################################################################################
+# Misc.
+
+def loadAllStandard(path):
+    """Load all standard markup files from the provided directory. Returns a list."""
+
+    names = set([x.split('.')[0] for x in os.listdir(path)])
+    res = []
+    for name in names:
+        res.append(Standard(name, path))
+    
+    return sorted(res, key=lambda x: int(x.name[5:]))   # book_XXX - sort by number
+
+def loadAllTest(path):
+    """Load all test markup files from the provided directory. Returns a list"""
+    names = set([x.split('.')[0] for x in os.listdir(path)])
+    res = []
+    for name in names:
+        res.append(Test(name, path))
+    
+    return sorted(res, key=lambda x: int(x.name[5:]))   # book_XXX - sort by number
