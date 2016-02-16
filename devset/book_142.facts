@@ -7,6 +7,7 @@ Where obj144 Турецкая республика | Турция
 Who obj147 Янукович Виктор
 Position span34102 президентом
 Where obj143 Украина
+Сложность повышенная
 
 142-2 Occupation
 Who obj150 Джемилев Мустафа
@@ -21,3 +22,8 @@ Where obj143 Украина
 142-4 Ownership
 Owner obj143 Украина | obj144 Турецкая республика | Турция
 Property obj164 Стратегический совет
+
+142-5 Meeting
+Participant obj147 Янукович Виктор
+Participant obj146 Эрдоган Реджеп
+
