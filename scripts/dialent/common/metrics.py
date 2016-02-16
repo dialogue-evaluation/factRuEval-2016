@@ -38,6 +38,11 @@ class Metrics:
                     if denominator > 0 else 0.0
             )
 
+        isValid = lambda x: x >= 0 and x <= 1
+        assert(isValid(self.precision))
+        assert(isValid(self.recall))
+        assert(isValid(self.f1))
+
     def add(self, other):
         self.tp_std += other.tp_std
         self.tp_test += other.tp_test

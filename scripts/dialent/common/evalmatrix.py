@@ -198,21 +198,27 @@ class EvaluationMatrix:
         return perfect_matches if len(perfect_matches) > 0 else matches
 
     def _evaluate(self, pairs, tag_filter = ''):
-        tp = 0
-
+        matched_std = set(self.std[_s] for _s,_t in pairs)
+        matched_test = set(self.test[_t] for _s,_t in pairs)
+        
         if tag_filter in EvaluationMatrix.allowed_tags:
             subset = self._reduce(pairs, tag_filter)
-            n_std = self.s[tag_filter].size
-            n_test = self.t[tag_filter].size
         else:
             subset = pairs
-            n_std = self.n_std
-            n_test = self.n_test
 
-        for pair in subset:
-            tp += self.calc.quality(self.std[pair[0]], self.test[pair[1]])
+        unmatched_std = [s for s in self.std if not (s in matched_std)]
+        unmatched_test = [t for t in self.test if not (t in matched_test)]
 
-        return Metrics.createSimple(tp, n_std, n_test)
+        # unmatched_test must contain all objects of the given tag that were not in ANY
+        # pair, including cases where a locorg was matched to an loc, for example
+        if tag_filter in EvaluationMatrix.allowed_tags:
+            unmatched_std = [s for s in unmatched_std if s.tag == tag_filter]
+            unmatched_test = [t for t in unmatched_test if t.tag == tag_filter]
+
+        # replace indices with actual objects for evaluation
+        actual_pairs = [(self.std[_s], self.test[_t]) for _s,_t in subset]
+
+        return self.calc.evaluate(actual_pairs, unmatched_std, unmatched_test)
 
     def _reduce(self, matching, tag):
         """Returns a sub-matching corresponding to the given tag"""

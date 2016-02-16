@@ -1,9 +1,11 @@
-# This module deals with test data representation for the first task
+﻿# This module deals with test data representation for the first task
 
 #########################################################################################
 
 import os
 import csv
+
+from dialent.common.util import safeOpen
 
 from dialent.config import Config
 
@@ -24,6 +26,7 @@ class Test:
         name - file to load the data from (without an extension)
         """
         try:
+            self.name = name
             full_name = os.path.join(dir, name + '.task1')
             self.load(full_name)
         except Exception as e:
@@ -43,7 +46,7 @@ class Test:
             
         # read the file that should consist of lines like
         # [TAG] [START_SYMBOL_INDEX] [LENGTH]
-        with open(filename, 'r', encoding='utf-8') as f:
+        with safeOpen(filename) as f:
             r = csv.reader(f, delimiter=' ', quotechar=Config.QUOTECHAR)
             for index, parts in enumerate(r):
                 # skip the empty lines
@@ -67,7 +70,7 @@ class Test:
         """Create a dictionary of typed TokenSet objects corresponding to the mentions,
         using the provided standard data to tokenize the intervals"""
         
-        res = dict([(x, []) for x in self.allowed_tags])
+        res = []
         for key in self.allowed_tags:
             for interval in self.mentions[key]:
                 ts = TokenSet([token
@@ -76,11 +79,13 @@ class Test:
                                       and token.end <= interval.end
                                       and not token.isIgnored()],
                              key, standard.text)
+
+                # save the interval within the token set
+                # to display it as-is in future
+                ts.interval = interval
+
                 if not is_locorg_allowed and key == 'locorg':
                     ts.tag = 'loc'
-                res[ts.tag].append(ts)
+                res.append(ts)
         
-        if not is_locorg_allowed:
-            assert(len(res['locorg']) == 0)
-            res.pop('locorg')
         return res

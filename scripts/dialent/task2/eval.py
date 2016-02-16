@@ -100,7 +100,11 @@ class Evaluator:
             return
 
         os.makedirs(out_dir, exist_ok=True)
-        with open(os.path.join(out_dir, name + '.report.txt'), 'w', encoding='utf-8') as f:
+        true_name = name + '.report.txt'
+        if self.em.metrics['overall'].f1 < 1.0:
+            true_name = '_' + true_name
+
+        with open(os.path.join(out_dir, true_name), 'w', encoding='utf-8') as f:
             f.write(self.buildReport())
 
         
@@ -124,6 +128,18 @@ class EntityQualityCalculator:
 
     def tagMultiplier(self, s, t):
         return EntityQualityCalculator.tag_table[(s.tag, t.tag)]
+
+    def evaluate(self, pairs, unmatched_std, unmatched_test):
+        """Evaluate the matching. Returns metrics"""
+        tp = 0
+
+        for pair in pairs:
+            tp += self.quality(pair[0], pair[1])
+
+        n_std = len(pairs) + len(unmatched_std)
+        n_test = len(pairs) + len(unmatched_test)
+
+        return Metrics.createSimple(tp, n_std, n_test)
 
 
     def priority(self, s, t):
