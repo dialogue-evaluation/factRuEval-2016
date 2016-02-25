@@ -1,17 +1,17 @@
-# This module deals primarily with the standard markup representation
+﻿# This module deals primarily with the standard markup representation
 
 import os
 import csv
 
 from dialent.config import Config, Tables
 
-from dialent.objects import Token
-from dialent.objects import Span
-from dialent.objects import Mention
-from dialent.objects import Entity
-from dialent.objects import Fact
-from dialent.objects import Interval
-from dialent.objects import TokenSet
+from dialent.objects.token import Token
+from dialent.objects.span import Span
+from dialent.objects.mention import Mention
+from dialent.objects.entity import Entity
+from dialent.objects.fact import Fact
+from dialent.objects.interval import Interval
+from dialent.objects.tokenset import TokenSet
 
 #########################################################################################
 
@@ -29,23 +29,23 @@ class Standard:
     
     def __init__(self, name, path='.'):
         self.name = name
-        try:
-            self.has_coref = True
-            self.has_facts = True
-            full_name = os.path.join(path, name)
-            self.loadTokens(full_name + '.tokens')
-            self.loadSpans(full_name + '.spans')
-            self.loadMentions(full_name + '.objects')
-            self.loadCoreference(full_name + '.coref')
-            self.loadFacts(full_name + '.facts')
-            self.loadText(full_name + '.txt')
-        except Exception as e:
-            print('Failed to load the standard of {}:'.format(name))
-            print(e)
-            # reset the document so it has no impact on the comparison
-            self.mentions = []
-            self.entities = []
-            self.facts = []
+#        try:
+        self.has_coref = True
+        self.has_facts = True
+        full_name = os.path.join(path, name)
+        self.loadTokens(full_name + '.tokens')
+        self.loadSpans(full_name + '.spans')
+        self.loadMentions(full_name + '.objects')
+        self.loadCoreference(full_name + '.coref')
+        self.loadFacts(full_name + '.facts')
+        self.loadText(full_name + '.txt')
+#        except Exception as e:
+#            print('Failed to load the standard of {}:'.format(name))
+#            print(e)
+#            # reset the document so it has no impact on the comparison
+#            self.mentions = []
+#            self.entities = []
+#            self.facts = []
     
     def loadTokens(self, filename):
         """Load the data from a file with the provided name
@@ -131,7 +131,8 @@ class Standard:
                 
                 
                 token_ids = [x.strip() for x in filtered_right[:new_span.ntokens]]
-                new_span.tokens = [self._token_dict[x] for x in token_ids]
+                new_span.tokens = sorted([self._token_dict[x] for x in token_ids],
+                                         key=lambda x: x.start)
                 new_span.text = ' '.join(filtered_right[new_span.ntokens:])
                 new_span.text = new_span.text.replace('\n', '')
                 
@@ -231,6 +232,9 @@ class Standard:
             if len(buffer) > 0:
                 self.facts.append(Fact.fromStandard(buffer, self._entity_dict, self._span_dict))
 
+        part_of_facts = [f for f in self.facts if f.tag == 'ispartof']
+        for fact in self.facts:
+            fact.expandWithIsPartOf(part_of_facts)
 
     def loadText(self, filename):
         """Load text from the associated text file"""
@@ -264,11 +268,8 @@ class Standard:
                     ts.setMark(token, mark)
             res.append(ts)
 
-        # find and mark organizations embedded within other organizations
-        all_orgs = [x for x in res if x.tag == 'org']
-        if is_locorg_allowed:
-            all_orgs.extend([x for x in res if x.tag == 'locorg'])
-        for org in all_orgs:
-            org.findParents(all_orgs)
+        # find and mark embedded objects
+        for obj in res:
+            obj.findParents(res)
 
         return res

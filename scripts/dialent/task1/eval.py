@@ -1,4 +1,4 @@
-
+﻿
 import os
 
 from dialent.standard import Standard
@@ -22,9 +22,13 @@ class Evaluator:
         else:
             self.tags = ['per', 'loc', 'org', 'overall']
 
+        self.metrics_dict = None
 
-    def evaluate(self, std_path, test_path, output_path=''):
-        """Run evaluation on all files in the given directories"""
+
+    def evaluate(self, std_path, test_path, output_path='', is_silent=False):
+        """Run evaluation on all files in the given directories
+        If output_path is provided, evaluation reports will be written there.
+        is_silent determines if the result is printed to the output"""
         std = loadAllStandard(std_path)
         test = loadAllTest(test_path)
 
@@ -40,19 +44,21 @@ class Evaluator:
         names = sorted(set([x.name for x in std]).intersection(
             set([y.name for y in test])), key=lambda x: int(x[5:]))
 
-        res = []
-        for tag in self.tags:
-            res.append(Metrics())
+        res = dict((tag, Metrics()) for tag in self.tags)
 
         for name in names:
             s = std_by_name[name]
             t = test_by_name[name]
-            m_tuple = self.evaluateDocument(s, t)
+            m = self.evaluateDocument(s, t)
+            self.metrics_dict = dict((x, m[x]) for x in self.tags)
             self.printReport(s.name, output_path)
-            for i, val in enumerate(res):
-                val.add(m_tuple[i])
+            for key in res:
+                res[key].add(self.metrics_dict[key])
             
-        print(self.buildMetricsTable(res))
+        if not is_silent:
+            print(self.buildMetricsTable(res))
+
+        return res
 
     def evaluateDocument(self, standard, test):
         """Run evaluation on the given standard and test markup"""
@@ -63,19 +69,16 @@ class Evaluator:
         em.findSolution()
         self.em = em
 
-        self.metrics_list = [em.metrics[x] for x in self.tags]
-        self.metrics_tuple = tuple(self.metrics_list)
-
-        return self.metrics_tuple
+        return em.metrics
 
     # Metrics and reports
 
-    def buildMetricsTable(self, metrics_list):
+    def buildMetricsTable(self, metrics_dict):
         """Build a table from the provided metrics for the output"""
-        assert(len(metrics_list) == len(self.tags))
+        assert(len(metrics_dict.keys()) == len(self.tags))
         res = 'Type    ' + Metrics.header()
-        for i, tag in enumerate(self.tags):
-            res += '\n{:8} '.format(tag.upper()) + metrics_list[i].toLine()
+        for tag in self.tags:
+            res += '\n{:8} '.format(tag) + metrics_dict[tag].toLine()
 
         return res
 
@@ -88,7 +91,7 @@ class Evaluator:
         res += self.em.describeMatchingTest() + '\n\n';
         res += '-------METRICS------\n'
         res += self.buildMetricsTable(
-                self.metrics_list
+                self.metrics_dict
             )
 
         return res
@@ -122,39 +125,33 @@ class TokenSetQualityCalculator:
     
     def evaluate(self, pairs, unmatched_std, unmatched_test):
         """Evaluate the matching. Returns metrics"""
+        matching = {}
+        for s, t in pairs:
+            matching[s] = t
+            matching[t] = s
+
         tp = 0
+        n_relevant_pairs = 0
         matched_std_objects = set()
         for s, t in pairs:
-            tp += self.quality(s, t)
-            matched_std_objects.add(s)
+            if not self.isIgnored(s, t, matching):
+                tp += self.quality(s, t)
+                matched_std_objects.add(s)
+                n_relevant_pairs += 1
 
-        n_test = len(pairs) + len(unmatched_test)
+        # in this task no unmatched test object can be ignored
+        n_test = n_relevant_pairs + len(unmatched_test)
 
-        n_std = len(pairs)
+        n_std = n_relevant_pairs
         for obj in unmatched_std:
-            is_relevant = True
             if not obj in matched_std_objects:
-
-                # this is the logic used to skip unmatched embedded organizations in the
-                # standard markup, but only if the larger organization is correctly
-                # matched
-                for parent in obj.parents:
-                    if parent in matched_std_objects:
-                        is_relevant = False
-
-                # alternatively, check if the object has no valuable spans
-                # unmatched objects with no spans marked by a positive number 
-                total_mark = sum([obj.mark(token) for token in obj.tokens])
-                if total_mark == 0.0:
-                    is_relevant = False
-
-            if is_relevant:
-                n_std += 1
+                if not self.isStandardIgnored(obj, matching):
+                    n_std += 1
 
         return Metrics.createSimple(tp, n_std, n_test)
 
     def priority(self, s, t):
-        """Calculates preliminary quality that goes into the optimization table"""
+        """Calculate preliminary quality that goes into the optimization table"""
         multiplier = self.tagMultiplier(s,t)
         if multiplier == 0:
             return 0
@@ -167,9 +164,8 @@ class TokenSetQualityCalculator:
         assert(summ > 0)
         return multiplier * tp / summ if summ > 0 else 0
 
-
     def quality(self, s, t):
-        """Calculates final quality that is maximized during the matching optimization"""
+        """Calculate final quality that is maximized during the matching optimization"""
         multiplier = self.tagMultiplier(s,t)
         if multiplier == 0:
             return 0
@@ -194,3 +190,52 @@ class TokenSetQualityCalculator:
         # summ can be equal to zero in cases when the mention has no 'priority' spans like
         # org_name. In these cases, we will just compare the annotations with no weights
         return multiplier * tp / summ if summ > 0 else self.priority(s,t)
+    
+    def isIgnored(self, s, t, matching):
+        """Check if the matched pair of (s, t) should be ignored within the current
+        matching"""
+
+
+        return self.isStandardIgnored(s, matching)
+
+    def isStandardIgnored(self, s, matching):
+        """Check if the given standard object should be ignored within the current
+        matching"""
+
+        # unnamed objects are ignored regardless of their matching status
+        if s.isUnnamed():
+            return True
+        
+        # embedded objects are ignored regardless of their matching status
+        if len(s.parents) > 0:
+            return True
+
+        # sibling object processing logic
+        assert(len(s.siblings) <= 1)
+        for sibling in s.siblings:
+#            assert(set([sibling.tag, s.tag]) == set(['org', 'loc']))
+            if (s in matching) == (sibling in matching):
+                # when both or neither are matched, ignore the non-organization
+                # in case of both being organizations, use any of them
+                if sibling.tag == s.tag:
+                    if s.is_ignored_sibling:
+                        return True
+                    else:
+                        sibling.is_ignored_sibling = True
+                        return False
+                else:
+                    assert('org' in [sibling.tag, s.tag])
+                    return s.tag != 'org'
+            else:
+                # otherwise ignore the unmatched sibling
+                return not (s in matching)
+
+
+        return False
+
+    def isTestIgnored(self, t, matching):
+        """Check if the given standard object should be ignored within the current
+        matching"""
+
+        # in this track no test object can be ignored
+        return False

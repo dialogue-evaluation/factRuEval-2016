@@ -9,9 +9,9 @@ from dialent.common.util import safeOpen
 
 from dialent.config import Config
 
-from dialent.objects import Interval
-from dialent.objects import Token
-from dialent.objects import TokenSet
+from dialent.objects.interval import Interval
+from dialent.objects.token import Token
+from dialent.objects.tokenset import TokenSet
 
 from dialent.standard import Standard
 

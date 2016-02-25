@@ -1,4 +1,4 @@
-# Runs the evaluation of the task 2 response
+﻿# Runs the evaluation of the task 2 response
 # Requires python 3 and numpy
 
 # Usage:
@@ -61,7 +61,7 @@ def main():
             assert False, 'unhandled option'
 
     assert std_path != None and test_path != None, 'Stnadard and test paths must be set'\
-        '(see python t1_eval.py -h)'
+        '(see python t2_eval.py -h)'
 
     e = Evaluator(mode)
     e.evaluate(std_path, test_path, out_path)

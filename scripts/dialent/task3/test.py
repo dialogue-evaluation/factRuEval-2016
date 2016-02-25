@@ -4,7 +4,7 @@
 
 import os
 
-from dialent.objects import Fact
+from dialent.objects.fact import Fact
 
 #########################################################################################
 

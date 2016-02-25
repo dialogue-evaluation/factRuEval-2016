@@ -1,4 +1,4 @@
-# Runs the evaluation of the task 3 response
+﻿# Runs the evaluation of the task 3 response
 # Requires python 3 and numpy
 
 # Usage:

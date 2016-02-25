@@ -1,4 +1,4 @@
-
+﻿
 import numpy as np
 
 from dialent.common.metrics import Metrics
@@ -116,12 +116,23 @@ class EvaluationMatrix:
         res = ''
         for x in matched:
             y = self.matching[x]
-            q = self.calc.quality(y, x) if is_swapped else self.calc.quality(x, y)
-            res += '{:.2f}\t{}\t=\t{}\n'.format(q, x.toInlineString(), y.toInlineString())
+            pair = (y, x) if is_swapped else (x, y)
+            is_ignored = self.calc.isIgnored(pair[0], pair[1], self.matching)
+            q = self.calc.quality(*pair)
+            res += '{}\t{}\t=\t{}\n'.format('{:7.2f}'.format(q)
+                                            if not is_ignored
+                                            else 'IGNORED',
+                    x.toInlineString(), y.toInlineString())
 
         res += '\n'
         for x in unmatched:
-            res += '0.00 {}\n'.format(x.toInlineString())
+            is_ignored = (self.calc.isTestIgnored(x, self.matching)
+                          if is_swapped
+                          else self.calc.isStandardIgnored(x, self.matching))
+            res += '{} {}\n'.format('{:7.2f}'.format(0.0)
+                                    if not is_ignored
+                                    else 'IGNORED',
+                    x.toInlineString())
 
         return res
 
@@ -151,20 +162,22 @@ class EvaluationMatrix:
 
             # let's see what other matching options does this test object have
             # this is necessary to check conditions for the logic below
-            possible_pairs_count += 1
             alt_count = 0
             skip_test_object = False
-            for k in std:
-                if self.m[k, t] == 1 and self.m[curr, t] < 1:
+            for k in std[1:]:
+                if self.m[k, t] == 1.0 and self.m[curr, t] < 1.0:
                     # test objects that have some other perfect matching must be skipped
                     skip_test_object = True
-                if self.m[k, t] != 0:
+                if self.m[k, t] != 0.0:
                     alt_count += 1
                 if alt_count > pair_max_alternatives:
                     pair_max_alternatives = alt_count
                 
             if skip_test_object:
                 continue
+            else:
+                possible_pairs_count += 1
+
 
             # try to confirm the pair
             res = self._recursiveSearch(
@@ -193,8 +206,8 @@ class EvaluationMatrix:
         Returns a list of test object indices
         
         According to the documentation, any perfectly fitting objects MUST be matched"""
-        perfect_matches = [t for t in test if self.m[s_index, t] == 1]
-        matches = [t for t in test if self.m[s_index, t] != 0] 
+        perfect_matches = [t for t in test if self.m[s_index, t] == 1.0]
+        matches = [t for t in test if self.m[s_index, t] > 0.0] 
         return perfect_matches if len(perfect_matches) > 0 else matches
 
     def _evaluate(self, pairs, tag_filter = ''):

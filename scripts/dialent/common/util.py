@@ -1,4 +1,4 @@
-# This module contains various functions used throughout all the tasks
+﻿# This module contains various functions used throughout all the tasks
 
 #########################################################################################
 
