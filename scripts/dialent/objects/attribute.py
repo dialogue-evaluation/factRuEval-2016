@@ -87,8 +87,7 @@ class Attribute:
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        value = ' '.join(parts[1:]).lower()
-        value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        value = ' '.join(parts[1:]).lower().replace('ё', 'е')
         instance.values.add(value)
 
         return instance
@@ -105,8 +104,7 @@ class Attribute:
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        value = parts[1].strip().lower()
-        value.replace('\u0401', '\u0435') # make all 'e'-s uniform
+        value = parts[1].strip().lower().replace('ё', 'е')
         instance.values.add(value)
 
         return instance
