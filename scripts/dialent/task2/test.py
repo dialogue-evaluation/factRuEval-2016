@@ -1,4 +1,4 @@
-# This module deals with test data representation for the second task
+﻿# This module deals with test data representation for the second task
 
 #########################################################################################
 
@@ -8,7 +8,7 @@ import csv
 from dialent.common.util import safeOpen
 from dialent.config import Config
 
-from dialent.objects import Entity
+from dialent.objects.entity import Entity
 
 from dialent.standard import Standard
 

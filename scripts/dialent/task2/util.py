@@ -43,10 +43,8 @@ def loadAllStandard(path):
 
 def loadAllTest(path):
     """Load all test markup files from the provided directory. Returns a list"""
-    names = set([x.split('.')[0] for x in os.listdir(path)])
-    res = []
-    for name in names:
-        res.append(Test(name, path))
+    names = set(x.split('.')[0] for x in os.listdir(path) if '.task2' in x)
+    res = [Test(name, path) for name in names]
     
     return sorted(res, key=lambda x: int(x.name[5:]))   # book_XXX - sort by number
 

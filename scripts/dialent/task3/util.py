@@ -5,6 +5,8 @@ import os
 from dialent.task2.util import loadAllStandard
 from dialent.task3.test import Test
 
+from dialent.objects.argument import StringValue
+
 #########################################################################################
 
 class ResponseGenerator:
@@ -40,10 +42,8 @@ def loadAllTest(path):
     """Load all test files from test_path. Returns a list of dialent.task3.test.Test
     objects"""
     
-    names = set([x.split('.')[0] for x in os.listdir(path)])
-    res = []
-    for name in names:
-        res.append(Test(name, path))
+    names = set(x.split('.')[0] for x in os.listdir(path) if '.task3' in x)
+    res = [Test(name, path) for name in names]
     
     return sorted(res, key=lambda x: int(x.name[5:]))   # book_XXX - sort by number
 
@@ -66,6 +66,11 @@ def validate(standard_path):
                     f_attr_count[key] += 1
                 else:
                     f_attr_count[key] = 1
+
+                for val in a.values:
+                    if not isinstance(val, StringValue):
+                        if 'span' in val.values:
+                            print('SPAN IN VAL!!!!')
 
                 if a.name in ['модальность', 'сложность', 'фаза']:
                     key = f.tag + ' - ' + a.name + ' - ' + a.values[0].descr

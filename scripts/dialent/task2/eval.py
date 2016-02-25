@@ -1,4 +1,4 @@
-# this module contains evaluation logic for the 2nd task
+﻿# this module contains evaluation logic for the 2nd task
 
 import os
 
@@ -22,13 +22,15 @@ class Evaluator:
     stat_tags = ['per', 'loc', 'org', 'overall']
 
     def __init__(self, mode='regular'):
-        """Initialize the object"""
+        """Initialize the object. Mode can be 'regular' or 'simple'"""
         assert(mode == 'regular' or mode == 'simple')
         self.mode = mode
 
 
-    def evaluate(self, std_path, test_path, output_path=''):
-        """Run evaluation on all files in the given directories"""
+    def evaluate(self, std_path, test_path, output_path='', is_silent=False):
+        """Run evaluation on all files in the given directories.
+        If output_path is provided, evaluation reports will be written there.
+        is_silent determines if the result is printed to the output"""
         std = loadAllStandard(std_path)
         test = loadAllTest(test_path)
 
@@ -39,9 +41,7 @@ class Evaluator:
             print('Warning: missing files :\n  {}'.format('\n  '.join(diff)))
             std = [s for s in std if s.name not in diff]
             test = [t for t in test if t.name not in diff]
-        res = []
-        for tag in Evaluator.stat_tags:
-            res.append(Metrics())
+        res = dict((tag, Metrics()) for tag in Evaluator.stat_tags)
 
         for i, s in enumerate(std):
             if not s.has_coref:
@@ -50,10 +50,13 @@ class Evaluator:
                 continue
             m_tuple = self.evaluateDocument(s, test[i])
             self.printReport(s.name, output_path)
-            for i, val in enumerate(res):
-                val.add(m_tuple[i])
+            for j, tag in enumerate(Evaluator.stat_tags):
+                res[tag].add(m_tuple[j])
             
-        print(self.buildMetricsTable(res))
+        if not is_silent:
+            print(self.buildMetricsTable(res))
+
+        return res
             
     def evaluateDocument(self, s, t):
         """Compare standard markup s with test markup t and evaluate T.
@@ -66,18 +69,18 @@ class Evaluator:
 
         self.metrics_tuple = (em.metrics['per'], em.metrics['loc'],
                 em.metrics['org'], em.metrics['overall'])
-        self.metrics_list = list(self.metrics_tuple)
+        self.metrics_dict = dict((x, em.metrics[x]) for x in Evaluator.stat_tags)
 
         return self.metrics_tuple
 
     # Metrics and reports
 
-    def buildMetricsTable(self, metrics_list):
+    def buildMetricsTable(self, metrics_dict):
         """Build a table from the provided metrics for the output"""
-        assert(len(metrics_list) == len(Evaluator.stat_tags))
+        assert(len(metrics_dict.keys()) == len(Evaluator.stat_tags))
         res = 'Type    ' + Metrics.header()
-        for i, tag in enumerate(Evaluator.stat_tags):
-            res += '\n{:8} '.format(tag.upper()) + metrics_list[i].toLine()
+        for tag in Evaluator.stat_tags:
+            res += '\n{:8} '.format(tag.upper()) + metrics_dict[tag].toLine()
 
         return res
 
@@ -90,7 +93,7 @@ class Evaluator:
         res += self.em.describeMatchingTest() + '\n\n';
         res += '-------METRICS------\n'
         res += self.buildMetricsTable(
-                self.metrics_list
+                self.metrics_dict
             )
 
         return res
@@ -143,7 +146,7 @@ class EntityQualityCalculator:
 
 
     def priority(self, s, t):
-        """Calculates preliminary quality that goes into the table"""
+        """Calculate preliminary quality that goes into the table"""
         multiplier = self.tagMultiplier(s,t)
         if multiplier == 0:
             return 0
@@ -152,7 +155,7 @@ class EntityQualityCalculator:
 
 
     def quality(self, s, t):
-        """Calculates final quality that is maximized during the search for the optimal
+        """Calculate final quality that is maximized during the search for the optimal
         matching"""
 
         unmatched_std = set(s.attributes)
@@ -178,3 +181,19 @@ class EntityQualityCalculator:
         d = float(tp + fn + fp)
 
         return (tp / d) if d > 0 else 0.0
+
+    def isIgnored(self, s, t, matching):
+        """Check if the matched pair of (s, t) should be ignored within the current
+        matching"""
+
+        return self.isStandardIgnored(s, matching)
+
+    def isStandardIgnored(self, s, matching):
+        """Check if the given standard object should be ignored within the current
+        matching"""
+        return False
+
+    def isTestIgnored(self, t, matching):
+        """Check if the given standard object should be ignored within the current
+        matching"""
+        return False
