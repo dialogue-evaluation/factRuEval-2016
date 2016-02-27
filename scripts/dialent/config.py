@@ -85,3 +85,13 @@ class Tables:
             'surname' : 1
         }
     }
+
+    # This table describes rules for mention and tokenset embedding, e.g.
+    # mentions with tag KEY can be embedded in mentions with tag VALUE
+    PARENT_TAGS = {
+        'per' : ['loc', 'org', 'locorg'],
+        'loc' : ['loc', 'org', 'locorg'],
+        'org' : ['org', 'locorg'],
+        'locorg' : ['org', 'locorg'],
+        'project' : ['org', 'locorg']
+    }

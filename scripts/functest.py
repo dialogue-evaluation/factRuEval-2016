@@ -82,9 +82,9 @@ class TestManager:
 
                 self.tests.append(FuncTest(meaningful, self))
 
-    def runTest(self, partial_name):
-        """Run test or tests with name containing the given partial name"""
-        tests = [x for x in self.tests if partial_name in x.name]
+    def runTest(self, name):
+        """Run test or tests with the given name"""
+        tests = [x for x in self.tests if name == x.name]
         for test in tests:
             test.run()
 

@@ -1,36 +1,41 @@
 # This file contains instruction for evaluator functionality testing
 
-# Task     mode     name             F1      comment
+# Task     mode     name                 F1      comment
 
-  1        -        embedded_org_1   0.0     embedded organizations (only the small annotation matched exactly)
-  1        -        embedded_org_2   1.0     embedded organizations (only the large annotation matched exactly)
-  1        -        embedded_org_3   1.0     embedded organizations (both annotations present)
-  1        -        embedded_org_4   0.66    embedded organizations (both annotations missing, 1 additional correct object)
+  1        -        embedded_org_1       0.0     embedded organizations (only the small annotation matched exactly)
+  1        -        embedded_org_2       1.0     embedded organizations (only the large annotation matched exactly)
+  1        -        embedded_org_3       1.0     embedded organizations (both annotations present)
+  1        -        embedded_org_4       0.66    embedded organizations (both annotations missing, 1 additional correct object)
 
-  1        -        embedded_per_1   0.0     person embedded in a location (only the small annotation matched exactly)
-  1        -        embedded_per_2   1.0     person embedded in a location (only the large annotation matched exactly)
-  1        -        embedded_per_3   1.0     person embedded in a location (both annotations present)
-  1        -        embedded_per_4   0.66    person embedded in a location (both annotations missing, 1 additional correct object)
+  1        -        embedded_per_1       0.0     person embedded in a location (only the small annotation matched exactly)
+  1        -        embedded_per_2       1.0     person embedded in a location (only the large annotation matched exactly)
+  1        -        embedded_per_3       1.0     person embedded in a location (both annotations present)
+  1        -        embedded_per_4       0.66    person embedded in a location (both annotations missing, 1 additional correct object)
   
-  1        -        geo_adj_skip_1   1.0     geo_adj objects being skipped (unmatched geo_adj, empty test)
-  1        -        geo_adj_skip_2   0.5     geo_adj objects being skipped (mathed geo_adj ignored, error elsewhere)
+  1        -        geo_adj_skip_1       1.0     geo_adj objects being skipped (unmatched geo_adj, empty test)
+  1        -        geo_adj_skip_2       0.5     geo_adj objects being skipped (mathed geo_adj ignored, error elsewhere)
 
-  1        -        unnamed_skip_1   1.0     unnamed entities being skipped (unmatched unnamed org, perfect test)
-  1        -        unnamed_skip_2   0.5     unnamed entities being skipped (matched unnamed org, error in test)
+  1        -        unnamed_skip_1       1.0     unnamed entities being skipped (unmatched unnamed org, perfect test)
+  1        -        unnamed_skip_2       0.5     unnamed entities being skipped (matched unnamed org, error in test)
 
-  1        -        org_loc_duality_1 1.0    synonymous ORG and LOC objects (both objects are present)
-  1        -        org_loc_duality_2 1.0    synonymous ORG and LOC objects (LOC missing)
-  1        -        org_loc_duality_3 1.0    synonymous ORG and LOC objects (ORG missing)
-  1        -        org_loc_duality_4 0.66   synonymous ORG and LOC objects (both missing, 1 extra correct object added)
+  1        -        org_loc_duality_1     1.0    synonymous ORG and LOC objects (both objects are present)
+  1        -        org_loc_duality_2     1.0    synonymous ORG and LOC objects (LOC missing)
+  1        -        org_loc_duality_3     1.0    synonymous ORG and LOC objects (ORG missing)
+  1        -        org_loc_duality_4     0.66   synonymous ORG and LOC objects (both missing, 1 extra correct object added)
 
-  2        -        ent_per_naming_1  1.0    person naming options (perfect match, both names and surname)
-  2        -        ent_per_naming_2  0.66   person naming options (only one correct name, correct surname)
-  2        -        ent_per_naming_3  0.5    person naming options (only one correct name and correct surname, extra incorrect name)
+  2        -        ent_per_naming_1      1.0    person naming options (perfect match, both names and surname)
+  2        -        ent_per_naming_2      0.66   person naming options (only one correct name, correct surname)
+  2        -        ent_per_naming_3      0.5    person naming options (only one correct name and correct surname, extra incorrect name)
 
-  2        m        ent_per_naming_4  1.0    person naming options in easy mode (extra incorrect name)
-  2        m        ent_per_naming_5  0.66   person naming options in easy mode (one missing name, extra incorrect name)
+  2        m        ent_per_naming_4      1.0    person naming options in easy mode (extra incorrect name)
+  2        m        ent_per_naming_5      0.66   person naming options in easy mode (one missing name, extra incorrect name)
 
-  2        -        ent_quotes        1.0    entity names being automatically put in qoutes
+  2        -        ent_quotes            1.0    entity names being automatically put in qoutes
+
+  2        -        ent_embedded_per_1    0.0    embedded person being ignored (person is present in standard and test, error elsewhere)
+  2        -        ent_embedded_per_2    1.0    embedded person being ignored (standard person is unmatched)
   
-  3        -        fact_org_names    1.0    organization descriptors being added properly
-  3        -        fact_duplicates   1.0    inexact duplicates being matched together
+  3        -        fact_org_names        1.0    organization descriptors being added properly
+  3        -        fact_duplicates       1.0    inexact duplicates being matched together
+
+  3        -        fact_unnormalized     1.0    attributes taken directly from the text rather than normalized

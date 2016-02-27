@@ -1,6 +1,10 @@
 ﻿# Representation of a span from the standard markup .spans layer
 
 from dialent.config import Config
+from dialent.config import Tables
+
+from dialent.objects.interval import Interval
+from dialent.objects.tokenset import TokenSet
 
 #########################################################################################
 
@@ -10,12 +14,15 @@ class Mention:
     def __init__(self, id, tag, span_ids, span_dict):
         """Create a new mention of a given type with the provided spans"""
         self.id = id
+        self.parents = []
         
         if not tag in Config.STANDARD_TYPES:
             raise Exception('Unknown mention tag: {}'.format(tag))
         self.tag = Config.STANDARD_TYPES[tag]
         
         self.spans = []
+        self.text = ''
+        self.interval_text = ''
         for id in span_ids:
             self.spans.append(span_dict[id])
         
@@ -25,6 +32,28 @@ class Mention:
             res += '\t{} : {}\n'.format(span.tag, span.text)
         res += '\n'
         return res
+
+    def findParents(self, mentions):
+        """Scans the given mention list for mentions embedding this one"""
+        self.parents = []
+        for m in [x for x in mentions if x.tag in Tables.PARENT_TAGS[self.tag]]:
+            if self.toInterval().isIn(m.toInterval()):
+                self.parents.append(m)
+
+    def toInterval(self):
+        assert(len(self.spans) > 0)
+        by_start = sorted(self.spans, key=lambda x: x.start)
+        by_end = sorted(self.spans, key=lambda x: x.end)
+        start = by_start[0].start
+        length = by_end[-1].end - by_start[0].start + 1
+        return Interval(start, length)
+
+    def setText(self, documentText):
+        """Sets the text from the document corresponding to the mention"""
+        ts = TokenSet([t for s in self.spans for t in s.tokens], self.tag, documentText)
+        self.text = ' '.join([t.text for t in ts.sortedTokens()])
+        interval = ts.toInterval()
+        self.interval_text = documentText[interval.start:interval.end]
 
     def __str__(self):
         return repr(self)
