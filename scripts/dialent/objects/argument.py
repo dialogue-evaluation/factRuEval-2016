@@ -4,6 +4,8 @@
 
 import os
 
+from dialent.common.util import compareStrings
+
 #########################################################################################
 
 jobs_file_path = os.path.join(
@@ -101,20 +103,33 @@ class EntityValue:
 
         # special logic for different types of entities
         assert( self.entity.tag != 'locorg' )
+        self.values = self.values.union(self._expandFromText())
 
         if self.entity.tag == 'per':
-            self.values = self._expandPerson(self.entity)
+            self.values = self.values.union(self._expandPerson(self.entity))
 
         if self.entity.tag in ['org', 'loc']:
-            self.values = self._expandWithDescr(self.entity)
+            self.values = self.values.union(self._expandWithDescr(self.entity))
 
     def equals(self, other):
         assert(isinstance(other, StringValue))
-        return other.descr in self.values
+        for val in self.values:
+            if compareStrings(val, other.value):
+                return True
+        return False
 
     def finalize(self):
         """Finalize the value"""
         self.values = [x.lower().strip(' \n\r\t').replace('ё', 'е') for x in self.values]
+
+    def _expandFromText(self):
+        """Returns a set of non-normalized values corresponding to each mention of the
+        entity"""
+        additional_values = []
+        for mention in self.entity.mentions:
+            additional_values.append(mention.text)
+            additional_values.append(mention.interval_text)
+        return set(additional_values)
 
     def _expandPerson(self, per):
         """Create all possible values for a person"""
@@ -127,7 +142,7 @@ class EntityValue:
 
         lists = [firstnames, lastnames, patronymics, nicknames]
         combinations = ['lfp', 'fpl', 'fp', 'fl', 'lf', 'n', 'f', 'p', 'l', 'fn']
-
+            
         values = []
         for c in combinations:
             values += self._buildPerValues(lists, c)
@@ -163,7 +178,7 @@ class EntityValue:
     def _expandWithDescr(self, org):
         """Replace the value list with all possible organization/location names"""
         assert(org.tag in ['org', 'loc'])
-        return self.values.union(set(org.getAttr('name')))
+        return set(org.getAttr('name'))
         
     def expandWithIsPartOf(self, ent_dict):
         if not (self.entity in ent_dict):
@@ -192,7 +207,10 @@ class SpanValue:
         self.descr = self.span.text
 
     def equals(self, other):
-        return other.value in self.values
+        for val in self.values:
+            if compareStrings(val, other.value):
+                return True
+        return False
 
     def finalize(self):
         """Finalize the value"""
@@ -219,7 +237,7 @@ class StringValue:
 
     def equals(self, other):
         # STUB
-        return self.descr == other.descr
+        return compareStrings(self.value, other.value)
 
     def finalize(self):
         """Finalize the value"""

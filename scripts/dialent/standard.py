@@ -13,6 +13,8 @@ from dialent.objects.fact import Fact
 from dialent.objects.interval import Interval
 from dialent.objects.tokenset import TokenSet
 
+from dialent.common.util import normalize
+
 #########################################################################################
 
 class Standard:
@@ -29,23 +31,23 @@ class Standard:
     
     def __init__(self, name, path='.'):
         self.name = name
-#        try:
-        self.has_coref = True
-        self.has_facts = True
-        full_name = os.path.join(path, name)
-        self.loadTokens(full_name + '.tokens')
-        self.loadSpans(full_name + '.spans')
-        self.loadMentions(full_name + '.objects')
-        self.loadCoreference(full_name + '.coref')
-        self.loadFacts(full_name + '.facts')
-        self.loadText(full_name + '.txt')
-#        except Exception as e:
-#            print('Failed to load the standard of {}:'.format(name))
-#            print(e)
-#            # reset the document so it has no impact on the comparison
-#            self.mentions = []
-#            self.entities = []
-#            self.facts = []
+        try:
+            self.has_coref = True
+            self.has_facts = True
+            full_name = os.path.join(path, name)
+            self.loadText(full_name + '.txt')
+            self.loadTokens(full_name + '.tokens')
+            self.loadSpans(full_name + '.spans')
+            self.loadMentions(full_name + '.objects')
+            self.loadCoreference(full_name + '.coref')
+            self.loadFacts(full_name + '.facts')
+        except Exception as e:
+            print('Failed to load the standard of {}:'.format(name))
+            print(e)
+            # reset the document so it has no impact on the comparison
+            self.mentions = []
+            self.entities = []
+            self.facts = []
     
     def loadTokens(self, filename):
         """Load the data from a file with the provided name
@@ -133,7 +135,7 @@ class Standard:
                 token_ids = [x.strip() for x in filtered_right[:new_span.ntokens]]
                 new_span.tokens = sorted([self._token_dict[x] for x in token_ids],
                                          key=lambda x: x.start)
-                new_span.text = ' '.join(filtered_right[new_span.ntokens:])
+                new_span.text = normalize(' '.join(filtered_right[new_span.ntokens:]))
                 new_span.text = new_span.text.replace('\n', '')
                 
                 self.spans.append(new_span)
@@ -175,6 +177,9 @@ class Standard:
                 
         # fill the mention dictionary
         self._mention_dict = dict([(x.id, x) for x in self.mentions])
+        for m in self.mentions:
+            m.findParents(self.mentions)
+            m.setText(self.text)
 
     def loadCoreference(self, filename):
         """Load coreference data from the associated file"""
@@ -239,7 +244,7 @@ class Standard:
     def loadText(self, filename):
         """Load text from the associated text file"""
         with open(filename, 'r', encoding='utf-8') as f:
-            self.text = ''.join( [line for line in f] )
+            self.text = normalize(''.join( [line for line in f] ))
             
     def makeTokenSets(self, is_locorg_allowed=True):
         """Create a dictionary of typed TokenSet objects corresponding to the mentions

@@ -1,5 +1,7 @@
 ﻿# Tokenset is a set of tokens corresponding to an object used in task 1 evaluation
 
+from dialent.config import Tables
+
 from dialent.objects.token import Token
 from dialent.objects.interval import Interval
 
@@ -61,9 +63,9 @@ class TokenSet:
         start_token = t[0]
         end_token = t[len(t)-1]
         
-        while start_token.prev != None and start_token.prev.isIgnoredFromRight():
+        while start_token.prev != None and start_token.prev.text == '"':
                 start_token = start_token.prev
-        while end_token.next != None and end_token.next.isIgnoredFromLeft():
+        while end_token.next != None and end_token.next.text == '"':
                 end_token = end_token.next
         
         start = start_token.start
@@ -99,7 +101,8 @@ class TokenSet:
         """Fill the parent and sibling lists of the current token set"""
         self.parents = []
         self.siblings = []
-        for other in all_token_sets:
+        for other in [x for x in all_token_sets
+                        if x.tag in Tables.PARENT_TAGS[self.tag]]:
             if other is self:
                 # all_token_sets can include this set as well
                 continue

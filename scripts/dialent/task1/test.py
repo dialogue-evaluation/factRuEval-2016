@@ -6,6 +6,7 @@ import os
 import csv
 
 from dialent.common.util import safeOpen
+from dialent.common.util import normalize
 
 from dialent.config import Config
 
@@ -55,7 +56,7 @@ class Test:
                     
                 try:
                     assert(len(parts) == 3)
-                    tag = parts[0].lower()
+                    tag = normalize(parts[0])
                     assert(tag in self.allowed_tags)
                     self.mentions[tag].append(Interval(*parts[1:]))
                 except Exception as e:

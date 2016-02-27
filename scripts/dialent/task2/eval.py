@@ -62,7 +62,10 @@ class Evaluator:
         """Compare standard markup s with test markup t and evaluate T.
         Returns the typical metrics tuple"""
 
-        em = EvaluationMatrix(s.entities, t.entities,
+        # remove all the nameless entities from the standard markup:
+        s_ent = [ent for ent in s.entities if len(ent.attributes) > 0]
+
+        em = EvaluationMatrix(s_ent, t.entities,
                  EntityQualityCalculator(forgive_extra_values = (self.mode=='simple')))
         em.findSolution()
         self.em = em
@@ -136,11 +139,22 @@ class EntityQualityCalculator:
         """Evaluate the matching. Returns metrics"""
         tp = 0
 
-        for pair in pairs:
-            tp += self.quality(pair[0], pair[1])
+        matching = {}
+        for s,t in pairs:
+            matching[s] = t
+            matching[t] = s
 
-        n_std = len(pairs) + len(unmatched_std)
-        n_test = len(pairs) + len(unmatched_test)
+        n_relevant_pairs = 0
+        for pair in pairs:
+            if not self.isIgnored(pair[0], pair[1], matching):
+                n_relevant_pairs += 1
+                tp += self.quality(pair[0], pair[1])
+
+        fn = len([s for s in unmatched_std if not self.isStandardIgnored(s, matching)])
+        fp = len([t for t in unmatched_test if not self.isTestIgnored(t, matching)])
+
+        n_std = n_relevant_pairs + fn
+        n_test = n_relevant_pairs + fp
 
         return Metrics.createSimple(tp, n_std, n_test)
 
@@ -191,6 +205,13 @@ class EntityQualityCalculator:
     def isStandardIgnored(self, s, matching):
         """Check if the given standard object should be ignored within the current
         matching"""
+
+        if len(s.mentions) > 0:
+            # check if all the mentions are ignored by the task 1 embedding rules
+            non_embedded_mentions = [m for m in s.mentions if len(m.parents) == 0]
+            if len(non_embedded_mentions) == 0:
+                return True
+
         return False
 
     def isTestIgnored(self, t, matching):

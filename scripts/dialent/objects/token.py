@@ -1,5 +1,7 @@
 ﻿# Representation of a token from the standard markup .tokens layer
 
+from dialent.common.util import normalize
+
 #########################################################################################
 
 class Token:
@@ -11,7 +13,7 @@ class Token:
         self.start = int(start)
         self.length = int(length)
         self.end = self.start + self.length - 1
-        self.text = text
+        self.text = normalize(text)
         self.next = None
         self.prev = None        
         

@@ -4,6 +4,9 @@
 
 import os
 
+from dialent.common.util import normalize
+from dialent.common.util import safeOpen
+
 from dialent.objects.fact import Fact
 
 #########################################################################################
@@ -29,10 +32,10 @@ class Test:
         """Do the exception-prone loading"""
         self.facts = []
 
-        with open(filename, 'r', encoding='utf-8') as f:
+        with safeOpen(filename) as f:
             buffer = ''
             for raw_line in f:
-                line = raw_line.strip(' \t\n\r')
+                line = normalize(raw_line)
                 if len(line) == 0:
                     if len(buffer) > 0:
                         self.facts.append(Fact.fromTest(buffer))

@@ -1,5 +1,7 @@
 ﻿# Attribute of an entity from the .coref layer of the standard markup
 
+from dialent.common.util import compareStrings
+
 #########################################################################################
 
 class Attribute:
@@ -59,7 +61,15 @@ class Attribute:
         
     def matches(self, other):
         """Returns true if a set of value of other corresponds to a set of values of this"""
-        return self.name == other.name and len(self.values.intersection(other.values)) > 0
+        if self.name != other.name:
+           return False
+      
+        for v1 in self.values:
+            for v2 in other.values:
+                if compareStrings(v1, v2):
+                    return True
+
+        return False
 
     def toTestString(self):
         """Creates a test representation of this attribute"""
