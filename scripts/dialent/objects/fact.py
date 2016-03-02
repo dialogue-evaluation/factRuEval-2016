@@ -65,6 +65,8 @@ class Fact:
         for a in self.arguments:
             for b in other.arguments:
                 if a.canMatch(b):
+                   if a.name=='position':
+                       continue
                    return True
 
         return False

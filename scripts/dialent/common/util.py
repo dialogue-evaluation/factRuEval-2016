@@ -41,10 +41,19 @@ def normalize(string):
 
     return res
 
+class DistCache:
+    """Cache for Levenstein distance calculations"""
+    table = {
+
+        }
+
 def dist(s1, s2):
     """Calculate Levenstein distance between the 2 strings"""
     if len(s2) > len(s1):
         return dist(s2, s1)
+
+    if (s1, s2) in DistCache.table:
+        return DistCache.table[(s1, s2)]
 
     # s1 is of greater or equal length to s2
     if len(s2) == 0:
@@ -61,6 +70,9 @@ def dist(s1, s2):
                 prev_row[j] + (1 if c1 != c2 else 0)
             )
         prev_row = cur_row
+
+    DistCache.table[(s1, s2)] = cur_row[-1]
+
     return cur_row[-1]
 
 def compareStrings(s1, s2, threshold=2):
