@@ -3,6 +3,8 @@
 
 import os
 
+import re
+
 from dialent.standard import Standard
 from dialent.task2.test import Test
 
@@ -37,6 +39,8 @@ def loadAllStandard(path):
     names = set([x.split('.')[0] for x in os.listdir(path)])
     res = []
     for name in names:
+        if re.match('book_[0-9]+', name) == None:
+            continue
         res.append(Standard(name, path))
     
     return sorted(res, key=lambda x: int(x.name[5:]))   # book_XXX - sort by number

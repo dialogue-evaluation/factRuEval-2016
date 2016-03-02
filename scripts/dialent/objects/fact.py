@@ -92,16 +92,17 @@ class Fact:
             self.has_easymode_modality = False
             return
 
-        # there should be no more than one modality per fact
-        assert(len(modality_args) == 1)
-        modality = modality_args[0]
-        self.arguments.remove(modality)
+        # Apparently there can be multiple modality values in the dataset
+        # And mutliple values per modality attribute
+        for modality in modality_args:
+            self.arguments.remove(modality)
 
-        assert(len(modality.values) == 1)
-
-        assert(isinstance(modality.values[0], StringValue))
-        value = modality.values[0].descr
-        self.has_easymode_modality = value in Fact.easymode_modality_values
+            assert(isinstance(modality.values[0], StringValue))
+            for value in modality.values:
+                self.has_easymode_modality = (
+                        self.has_easymode_modality
+                        or (value.descr in Fact.easymode_modality_values)
+                )
 
     def _processDifficulty(self):
         difficulty_args = [a for a in self.arguments if a.name == 'сложность']
