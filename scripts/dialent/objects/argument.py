@@ -29,6 +29,8 @@ class Argument:
             Argument.loadPositionDict()
 
         self.name = name.strip(' \n\r\t').lower()
+        if self.name == 'job':
+            self.name = 'position'
         self.is_special = self.name in Argument.special_names
         self.values = []
         self.fact = None

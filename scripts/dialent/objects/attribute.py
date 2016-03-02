@@ -1,6 +1,7 @@
 ﻿# Attribute of an entity from the .coref layer of the standard markup
 
 from dialent.common.util import compareStrings
+from dialent.common.util import normalize
 
 #########################################################################################
 
@@ -71,6 +72,14 @@ class Attribute:
 
         return False
 
+    def isValid(self):
+        """Checks if the attribute is valid (has non-empty values)"""
+        for value in self.values:
+            if len(value) > 0:
+                return True
+
+        return False
+
     def toTestString(self):
         """Creates a test representation of this attribute"""
         return '\n'.join(['{} : {}'.format(self.name, x) for x in self.values])
@@ -97,7 +106,7 @@ class Attribute:
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        value = ' '.join(parts[1:]).lower().replace('ё', 'е')
+        value = normalize(' '.join(parts[1:]))
         instance.values.add(value)
 
         return instance
@@ -110,11 +119,11 @@ class Attribute:
         Returns a new Attribute instance"""
 
         parts = line.split(':')
-        assert(len(parts) == 2)
+        assert(len(parts) >= 2)
 
         instance = cls()
         instance.name = parts[0].strip().lower()
-        value = parts[1].strip().lower().replace('ё', 'е')
+        value = normalize(':'.join(parts[1:]))
         instance.values.add(value)
 
         return instance
