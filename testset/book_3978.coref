@@ -16,7 +16,9 @@ name Россия
 firstname Роберт
 lastname Дадли
 
-1659 47247 47250 47258 47260 47265 48680
+1659 47247 47250 47258 47260 47265 47275
+descriptor группа 
+descriptor группа компаний
 name BP
 
 1660 47276
@@ -43,9 +45,4 @@ name Ренова
 
 1666 47254
 name Access Industries
-
-1694 47275
-descriptor группа
-descriptor группа компаний
-name группа компаний BP
 
