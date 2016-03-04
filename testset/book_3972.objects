@@ -1,9 +1,9 @@
 53726 Org 88968 # ICE
 53727 Org 88969 # NYSE
-53728 LocOrg 88970 88971 88972 88973 # Американская финансовая компания компания ICE
+53728 Org 88970 88971 88972 88973 # Американская финансовая компания компания ICE
 53729 Org 88974 # NYSE Euronext
 53730 Location 88975 # США
-53731 LocOrg 88976 88977 # франкфуртскую Deutsche Börse
+53731 Org 88976 88977 # франкфуртскую Deutsche Börse
 54072 Location 88976 # франкфуртскую
 53732 Org 88978 # NYSE Euronext
 53733 Org 88979 # Deutsche Börse
@@ -18,7 +18,7 @@
 53744 Org 88996 # ICE
 53745 Org 88997 # NYSE Euronext
 53746 LocOrg 88998 # США
-53747 LocOrg 88999 # NYSE Euronext
+53747 Org 88999 # NYSE Euronext
 53748 Org 89000 # ICE
 53749 Org 89001 # ICE
 53750 Org 89002 # NYSE Euronext
