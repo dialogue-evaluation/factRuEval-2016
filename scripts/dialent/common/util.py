@@ -47,6 +47,17 @@ class DistCache:
 
         }
 
+    # rather arbitrary threshold function
+    thresholds = [0, 0, 1, 1, 1, 1, 2] # 2 for longer strings
+
+    @classmethod
+    def getThreshold(cls, str_len):
+        """Return fuzzy comparison threshold for a string of the given length"""
+        if str_len >= len(cls.thresholds):
+            return cls.thresholds[-1]
+        return cls.thresholds[str_len]
+
+
 def dist(s1, s2):
     """Calculate Levenstein distance between the 2 strings"""
     if len(s2) > len(s1):
@@ -75,7 +86,9 @@ def dist(s1, s2):
 
     return cur_row[-1]
 
-def compareStrings(s1, s2, threshold=2):
+def compareStrings(s1, s2):
     """Check if the Levenstein distance between s1 and s2 is less or equal than
     the threshold value. If it is, the strings are considered equal, otherwise not equal"""
+
+    threshold = DistCache.getThreshold(max(len(s1), len(s2)))
     return dist(s1, s2) <= threshold
