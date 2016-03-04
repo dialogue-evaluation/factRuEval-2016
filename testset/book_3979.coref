@@ -44,7 +44,7 @@ name ЮТВ
 1994 47166 47192
 descriptor совет
 descriptor совет директоров
-name Совет директоров компании
+descriptor совет директоров компании
 
 1995 47169
 firstname Георгий
@@ -92,6 +92,7 @@ lastname Мирилашвили
 2007 47212 47226
 firstname Лев
 lastname Леваев
+lastname Левиев
 
 2009 47213
 name Digital Sky Technologies
