@@ -38,6 +38,8 @@
   2        -        ent_geo_adj_skip_1    1.0    entities made entirely out of geo_adj must be ignored (object is unmatched)
   2        -        ent_geo_adj_skip_2    0.0    entities made entirely out of geo_adj must be ignored (object is matched, error elsewhere)
   
+  2        -        fuzzy_short_strings   0.17   short string properties macthing without fuzzy string comparison
+  
   3        -        fact_org_names        1.0    organization descriptors being added properly
   3        -        fact_duplicates       1.0    inexact duplicates being matched together
 
