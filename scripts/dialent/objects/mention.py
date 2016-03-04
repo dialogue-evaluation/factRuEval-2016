@@ -33,6 +33,11 @@ class Mention:
         res += '\n'
         return res
 
+    def isGeoAdj(self):
+        """Checks if the mention only has geo_adj spans"""
+        non_geo_adj = [s for s in self.spans if s.tag != 'geo_adj']
+        return len(non_geo_adj) == 0
+
     def findParents(self, mentions):
         """Scans the given mention list for mentions embedding this one"""
         self.parents = []

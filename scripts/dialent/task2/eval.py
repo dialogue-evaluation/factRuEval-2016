@@ -212,6 +212,11 @@ class EntityQualityCalculator:
             if len(non_embedded_mentions) == 0:
                 return True
 
+            # ignore all entities with only geo_adj mentions
+            non_geoadj_mentions = [m for m in s.mentions if not m.isGeoAdj()]
+            if len(non_geoadj_mentions) == 0:
+                return True
+
         return False
 
     def isTestIgnored(self, t, matching):
