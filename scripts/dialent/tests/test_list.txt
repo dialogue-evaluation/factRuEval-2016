@@ -35,6 +35,9 @@
   2        -        ent_embedded_per_1    0.0    embedded person being ignored (person is present in standard and test, error elsewhere)
   2        -        ent_embedded_per_2    1.0    embedded person being ignored (standard person is unmatched)
   
+  2        -        ent_geo_adj_skip_1    1.0    entities made entirely out of geo_adj must be ignored (object is unmatched)
+  2        -        ent_geo_adj_skip_2    0.0    entities made entirely out of geo_adj must be ignored (object is matched, error elsewhere)
+  
   3        -        fact_org_names        1.0    organization descriptors being added properly
   3        -        fact_duplicates       1.0    inexact duplicates being matched together
 
