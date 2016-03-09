@@ -33,9 +33,10 @@ firstname Николай
 patronymic Петрович
 lastname Вертинский
 
-3426 52859 52862
+3426 52859 52862 54384
 firstname Евгения
 patronymic Степановна
+lastname Скалацкая
 lastname Сколацкая
 
 3427 52878 52950 52960
@@ -332,7 +333,7 @@ descriptor театр
 name Соловцовский театр
 
 3511 52855
-firstname Мая
+firstname Май
 
 3512 52856
 firstname Безноженька
