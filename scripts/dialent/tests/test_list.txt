@@ -40,6 +40,10 @@
   
   2        -        fuzzy_short_strings   0.17   short string properties macthing without fuzzy string comparison
   
+  2        -        walt_disney           1.0    person with a mention fully matching that of an organization being ignored
+  
+  2        -        ent_geo_adj_and_descr     1.0    entity with only descriptors and geo_adj spans being ignored
+  
   3        -        fact_org_names        1.0    organization descriptors being added properly
   3        -        fact_duplicates       1.0    inexact duplicates being matched together
 
