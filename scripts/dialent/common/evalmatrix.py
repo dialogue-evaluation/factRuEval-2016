@@ -157,7 +157,8 @@ class EvaluationMatrix:
         possible_pairs_count = 0
         pair_max_alternatives = 0
 
-        for t in self._findMatches(curr, test):
+        options, has_perfect_match = self._findMatches(curr, test)
+        for t in options:
             i = test.index(t)
 
             # let's see what other matching options does this test object have
@@ -189,8 +190,10 @@ class EvaluationMatrix:
         # check what would happen if this standard object were ignored
         # this check is obviously performance-heavy and only necessary under
         # these conditions
-        if (possible_pairs_count == 0 or
-                possible_pairs_count == 1 and pair_max_alternatives > 1):
+        if (possible_pairs_count == 0
+                or possible_pairs_count == 1
+                    and pair_max_alternatives > 0
+                    and not has_perfect_match):
             res = self._recursiveSearch(
                 std[1:], test,
                 pairs)
@@ -208,7 +211,10 @@ class EvaluationMatrix:
         According to the documentation, any perfectly fitting objects MUST be matched"""
         perfect_matches = [t for t in test if self.m[s_index, t] == 1.0]
         matches = [t for t in test if self.m[s_index, t] > 0.0] 
-        return perfect_matches if len(perfect_matches) > 0 else matches
+        if len(perfect_matches) > 0:
+            return perfect_matches, True
+        else:
+            return matches, False
 
     def _evaluate(self, pairs, tag_filter = ''):
         matched_std = set(self.std[_s] for _s,_t in pairs)

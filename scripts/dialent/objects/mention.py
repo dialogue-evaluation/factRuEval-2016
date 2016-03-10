@@ -38,12 +38,23 @@ class Mention:
         non_geo_adj = [s for s in self.spans if s.tag != 'geo_adj']
         return len(non_geo_adj) == 0
 
+    def isDescr(self):
+        """Checks if the mention only has descriptor spans"""
+        non_descr = [s for s in self.spans if not ('descr' in s.tag)]
+        return len(non_descr) == 0
+
     def findParents(self, mentions):
         """Scans the given mention list for mentions embedding this one"""
         self.parents = []
         for m in [x for x in mentions if x.tag in Tables.PARENT_TAGS[self.tag]]:
-            if self.toInterval().isIn(m.toInterval()):
+            s_int = self.toInterval()
+            m_int = m.toInterval()
+            if s_int.isIn(m_int):
                 self.parents.append(m)
+            else:
+                # organizations have priority over equally sized people and locations
+                if self.tag in ['per', 'loc'] and m.tag=='org' and s_int.isEqual(m_int):
+                    self.parents.append(m)
 
     def toInterval(self):
         assert(len(self.spans) > 0)
