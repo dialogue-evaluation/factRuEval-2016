@@ -89,7 +89,7 @@ firstname Воланд
 lastname Булгаков
 
 3324 53973
-firstname Ауэрбах
+lastname Ауэрбах
 
 3325 53972
 descriptor погребок Ауэрбаха
@@ -125,7 +125,7 @@ firstname Михаил
 lastname Бахтин
 
 3334 54018 54040
-firstname Рабле
+lastname Рабле
 
 3335 54055 54056 54062
 lastname Корейко
@@ -140,7 +140,7 @@ lastname Кудрин
 lastname Монте - Кристо
 
 3339 54057
-firstname Фанфира
+firstname Фафнира
 
 3340 54044 54047
 firstname Ольга
@@ -184,7 +184,7 @@ name ГПУ
 name СССР
 
 3353 54008
-firstname Фосс
+lastname Фосс
 
 3355 54010
 firstname Лукулл
