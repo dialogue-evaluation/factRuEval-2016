@@ -14,7 +14,7 @@ def safeOpen(filename):
         if f != None:
             return f
 
-def safeNormalize(string):
+def normalize(string):
     """Run a number of normalization operations on the given string.
     The string is normalized not in the linguistic sense, but rather in such a way that
     captialization, e/ё and quote simbols become irrelevant in comparison
@@ -39,33 +39,6 @@ def safeNormalize(string):
     # unify all ё/е
     res = res.replace('ё', 'е')
 
-    # unify all dashes
-    for s in '-‐−‒–—―':
-        res = res.replace(s, '-')
-
-    return res
-
-def normalize(string):
-    """Run a number of normalization operations on the given string.
-    The string is normalized not in the linguistic sense, but rather in such a way that
-    captialization, e/ё and quote simbols become irrelevant in comparison
-    
-    Unlike safeNormalize, this function also attempts to get rid of extra spaces before
-    punctuation"""
-
-    res = safeNormalize(string)
-
-    # in standard strings are generated from tokens, and sometimes have 1 extra space
-    # before or after puntuation symbols
-
-    res = res.replace(' ,', ',')
-    res = res.replace(' .', '.')
-    res = res.replace(' -', '-')
-    res = res.replace('- ', '-')
-
-    res = res.replace('( ', '(')
-    res = res.replace(' )', ')')
-
     return res
 
 class DistCache:
@@ -75,7 +48,7 @@ class DistCache:
         }
 
     # rather arbitrary threshold function
-    thresholds = [0, 0, 1, 1, 1, 1, 1, 1, 1, 2] # 2 for longer strings
+    thresholds = [0, 0, 1, 1, 1, 1, 2] # 2 for longer strings
 
     @classmethod
     def getThreshold(cls, str_len):

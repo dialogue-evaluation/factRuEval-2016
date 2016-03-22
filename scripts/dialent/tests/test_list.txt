@@ -42,23 +42,9 @@
   
   2        -        walt_disney           1.0    person with a mention fully matching that of an organization being ignored
   
-  2        -        ent_geo_adj_and_descr 1.0    entity with only descriptors and geo_adj spans being ignored
+  2        -        ent_geo_adj_and_descr     1.0    entity with only descriptors and geo_adj spans being ignored
   
   3        -        fact_org_names        1.0    organization descriptors being added properly
   3        -        fact_duplicates       1.0    inexact duplicates being matched together
 
   3        -        fact_unnormalized     1.0    attributes taken directly from the text rather than normalized
-  
-# ISSUES FROM GITHUB:
-
-  2        -        issue_169             1.0    169
-  2        -        issue_164             1.0    164
-  2        -        issue_162             1.0    162
-  2        -        issue_159_1           1.0    159
-  2        -        issue_159_2           0.0    159
-  2        -        issue_158             1.0    158
-  2        -        issue_155             1.0    155
-  2        -        issue_145             1.0    145
-  2        -        issue_137             1.0    137
-  2        -        issue_132             0.0    132
-  2        -        issue_127             1.0    127

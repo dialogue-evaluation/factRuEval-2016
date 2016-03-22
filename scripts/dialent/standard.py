@@ -14,7 +14,6 @@ from dialent.objects.interval import Interval
 from dialent.objects.tokenset import TokenSet
 
 from dialent.common.util import normalize
-from dialent.common.util import safeNormalize
 
 #########################################################################################
 
@@ -245,7 +244,7 @@ class Standard:
     def loadText(self, filename):
         """Load text from the associated text file"""
         with open(filename, 'r', encoding='utf-8') as f:
-            self.text = safeNormalize(''.join( [line for line in f] ))
+            self.text = normalize(''.join( [line for line in f] ))
             
     def makeTokenSets(self, is_locorg_allowed=True):
         """Create a dictionary of typed TokenSet objects corresponding to the mentions

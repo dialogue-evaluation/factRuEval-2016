@@ -40,7 +40,7 @@ class Mention:
 
     def isDescr(self):
         """Checks if the mention only has descriptor spans"""
-        non_descr = [s for s in self.spans if 'descr' not in s.tag]
+        non_descr = [s for s in self.spans if not ('descr' in s.tag)]
         return len(non_descr) == 0
 
     def findParents(self, mentions):
