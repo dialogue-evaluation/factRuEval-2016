@@ -21,11 +21,15 @@ name НАСА
 
 3290 52609
 descriptor власти
+descriptor власть
+descriptor портовая власть
 descriptor портовые власти
 name портовые власти штата Нью-Йорк
 
 3291 52610
 descriptor власти
+descriptor власть
+descriptor портовая власть
 descriptor портовые власти
 name портовые власти штата Нью-Джерси
 
