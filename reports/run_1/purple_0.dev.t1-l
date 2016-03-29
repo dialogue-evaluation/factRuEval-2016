@@ -1,0 +1,15 @@
+Failed to load ".//purple/purple_0.devset/book_409.task1"
+Error: ".//purple/purple_0.devset/book_409.task1", line 11.
+Expected: [locorg/org/per/loc] [START_SYMBOL_INDEX] [LENGTH]
+Received: ORG	1330	4
+Details: 
+Failed to load ".//purple/purple_0.devset/book_394.task1"
+Error: ".//purple/purple_0.devset/book_394.task1", line 102.
+Expected: [locorg/org/per/loc] [START_SYMBOL_INDEX] [LENGTH]
+Received: PER	2363	6
+Details: 
+Type    P        R        F1       TP1      TP2      In Std.  In Test.
+per        0.9226   0.9036   0.9130   657.83   657.83      728      713
+loc        0.9217   0.8982   0.9098   846.08   846.08      942      918
+org        0.7596   0.6435   0.6968   425.38   425.38      661      560
+overall    0.8806   0.8277   0.8533  1929.30  1929.30     2331     2191
