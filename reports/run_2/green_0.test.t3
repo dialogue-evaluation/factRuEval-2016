@@ -1,0 +1,7 @@
+Running evaluation, this might take a while...
+TAG             P        R        F1       TP1      TP2      In Std.  In Test.
+ownership         0.3465   0.0916   0.1449    12.92    13.17      141       38
+occupation        0.6542   0.3581   0.4628   120.31   122.98      336      188
+meeting           0.6667   0.1481   0.2424     6.67     6.67       45       10
+deal              0.1803   0.0591   0.0890     6.03     7.03      102       39
+overall           0.5449   0.2339   0.3273   145.93   149.84      624      275

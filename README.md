@@ -5,7 +5,7 @@ http://www.dialog-21.ru/evaluation/2016/letter/
 
 ###Статус
 
-Все прогоны зарегистрированы. Идёт оценка.
+Оценка завершена. Результаты предварительной (run_1) и окончательной (run_2) оценок опубликованы в папке https://github.com/dialogue-evaluation/factRuEval-2016/tree/master/reports .
 
 ###Тестсет
 
