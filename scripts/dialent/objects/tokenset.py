@@ -115,4 +115,6 @@ class TokenSet:
     def toInlineString(self):
         """Make an inline representation using the tokensets interval"""
         i = self.toInterval()
-        return self.tag.upper() + ' {} "{}"'.format(i, self.text[i.start:i.end+1])
+        return (self.tag.upper()
+                + (' {}'.format(self.id) if self.id != -1 else '')
+                + ' {} "{}"'.format(i, self.text[i.start:i.end+1]))

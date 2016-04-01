@@ -54,6 +54,7 @@ class Entity:
     def toInlineString(self):
         """Creates an inline description of this entity"""
         res = self.tag.upper()
+        res += ' ' + str(self.id) if self.id != -1 else ''
         res += ' [' + ', '.join([str(x) for x in self.attributes]) + ']'
 
         return res

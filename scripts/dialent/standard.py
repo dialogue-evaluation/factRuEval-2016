@@ -268,6 +268,8 @@ class Standard:
                     [x for span in mention.spans for x in span.tokens],
                     key, self.text)
 
+            ts.id = mention.id
+
             for span in mention.spans:
                 for token in span.tokens:
                     mark = Tables.getMark(ts.tag, span.tag)

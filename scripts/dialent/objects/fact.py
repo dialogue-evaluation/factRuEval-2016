@@ -29,6 +29,7 @@ class Fact:
     def __init__(self):
         """Initialize the object (use Fact.fromStandard/Fact.fromTest instead)"""
         self.tag = ''
+        self.id = ''
         self.arguments = []
         self.has_easymode_modality = False
         self.has_hardmode_difficulty = False
@@ -39,7 +40,7 @@ class Fact:
                          + [x.toTest() for x in self.arguments if not x.is_special]) + '\n'
 
     def toInlineString(self):
-        res = '[ '
+        res = '[ ' + str(self.id) + ' '
         if self.has_easymode_modality:
             res += '(MODALITY) '
         if self.has_hardmode_difficulty:
@@ -53,6 +54,7 @@ class Fact:
     def _load_id_line(self, line):
         """Loads the first line of the fact description"""
         parts = line.split(' ')
+        self.id = parts[0]
         self.tag = parts[1].strip(' :\n\t\r').lower()
 
     def canMatch(self, other):
